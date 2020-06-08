@@ -17,6 +17,7 @@ public class LogErrorParser {
     int lineNum;
 
     public List<LogError> parseLog(String pathToLogFile) {
+
         List<LogError> errors = new ArrayList<>();
         File file = new File(pathToLogFile);
         try {
@@ -30,14 +31,13 @@ public class LogErrorParser {
         while(scan.hasNextLine()) {
             currentLine = scan.nextLine();
             lineNum++;
-            if(currentLine.toUpperCase().matches(POC_REGEX)) {
+            if(currentLine.matches(POC_REGEX)) {
                 numErrors++;
                 log.info("Found Error: " + numErrors);
                 errors.add(parseLine(currentLine));
 
             }
         }
-
         return errors;
     }
 
@@ -51,25 +51,15 @@ public class LogErrorParser {
         if(currentLine.toUpperCase().matches(".*ERROR.*")) {
             currentError.setExternal(true);
         }
-        String[] parse = currentLine.split("-");
+        String[] parse = currentLine.split("- ");
         //Includes error source code location
-        currentError.setErrorMessage(parse[1] + parse[2]);
+        currentError.setErrorMessage(parse[1] + "- " + parse[2]);
 
 
         //etc....
 
         return currentError;
     }
-/* String source; // path to log file
-    int lineNumber; // starting line number within the source file
-
-    Boolean isExternal;
-    String errorMessage;
-    List<String> traceBacks;
-    LogError nestedError;
-
-    List<ExternalLink> stackOverflow;
-    List<ExternalLink> gitHub;*/
 
 
 }
