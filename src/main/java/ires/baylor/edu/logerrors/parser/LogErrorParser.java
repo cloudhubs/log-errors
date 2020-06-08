@@ -12,11 +12,13 @@ import java.util.Scanner;
 @Slf4j
 public class LogErrorParser {
     Scanner scan;
+    String pathToLogFile;
     String POC_REGEX = "[0-9]{4}(?:-[0-9]{2}){2} (?:[0-9]{2}:){2}[0-9]{2},[0-9]*? ((?:WARNING)|(?:ERROR)) - (.*?\\.py:[0-9]*?) - (.*)";
     int numErrors;
     int lineNum;
 
     public List<LogError> parseLog(String pathToLogFile) {
+        this.pathToLogFile = pathToLogFile;
 
         List<LogError> errors = new ArrayList<>();
         File file = new File(pathToLogFile);
@@ -46,7 +48,8 @@ public class LogErrorParser {
         LogError currentError = new LogError();
         //Create new LogError
         currentError.setLineNumber(lineNum);
-
+        currentError.setSource(pathToLogFile);
+        
         currentError.setExternal(false);
         if(currentLine.toUpperCase().matches(".*ERROR.*")) {
             currentError.setExternal(true);
