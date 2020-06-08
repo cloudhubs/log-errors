@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 public class LogError {
     String source; // path to log file
-    int lineNumber; // starting line number within the source file
+    int lineNumber; // starting line number within the log file
 
     String errorMessage;
     List<String> traceBacks;
