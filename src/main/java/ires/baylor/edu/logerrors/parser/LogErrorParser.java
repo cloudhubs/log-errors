@@ -49,10 +49,10 @@ public class LogErrorParser {
         //Create new LogError
         currentError.setLineNumber(lineNum);
         currentError.setSource(pathToLogFile);
-        
-        currentError.setExternal(false);
+
+        currentError.setIsExternal(false);
         if(currentLine.toUpperCase().matches(".*ERROR.*")) {
-            currentError.setExternal(true);
+            currentError.setIsExternal(true);
         }
         String[] parse = currentLine.split("- ");
         //Includes error source code location
