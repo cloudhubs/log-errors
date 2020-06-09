@@ -33,7 +33,7 @@ class TracebackParserTest {
 				List.of("File \"/opt/app-root/lib/python3.6/site-packages/insights/core/dr.py\", line 661, in invoke\n" + 
 						"return self.component(*args)",
 						"File \"/opt/app-root/lib/python3.6/site-packages/ccx_ocp_core/models/nodes.py\", line 108, in Nodes\n" + 
-						"int(node.q.status.capacity.memory.value.split(\"Ki\")[0]) / (1000 * 1000), 2"),
-				Arguments.of("not a proper entry", List.of())));
+						"int(node.q.status.capacity.memory.value.split(\"Ki\")[0]) / (1000 * 1000), 2")),
+				Arguments.of("not a proper entry", List.of()));
 	}
 }
