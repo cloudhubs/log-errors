@@ -8,50 +8,44 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class LogErrorParser {
-    Scanner scan;
-    String pathToLogFile;
-    String POC_REGEX = "[0-9]{4}(?:-[0-9]{2}){2} (?:[0-9]{2}:){2}[0-9]{2},[0-9]*? ((?:WARNING)|(?:ERROR)) - (.*?\\.py:[0-9]*?) - (.*)";
-    int numErrors;
-    int lineNum;
+    final static String POC_REGEX = "[0-9]{4}(?:-[0-9]{2}){2} (?:[0-9]{2}:){2}[0-9]{2},[0-9]*? ((?:WARNING)|(?:ERROR)) - (.*?\\.py:[0-9]*?) - (.*)";
 
-    public List<LogError> parseLog(String pathToLogFile) {
-        this.pathToLogFile = pathToLogFile;
-
+    public static List<LogError> parseLog(String pathToLogFile) throws FileNotFoundException {
+        Pattern linePattern = Pattern.compile(POC_REGEX);
+        Scanner scan = new Scanner(new File(pathToLogFile));
         List<LogError> errors = new ArrayList<>();
-        File file = new File(pathToLogFile);
-        try {
-            scan = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            log.info("Unable to create scanner");
-        }
-
         String currentLine;
-        numErrors = lineNum = 0;
-        while(scan.hasNextLine()) {
+        int numErrors = 0, lineNum = 0;
+
+
+        while (scan.hasNextLine()) {
             currentLine = scan.nextLine();
             lineNum++;
-            if(currentLine.matches(POC_REGEX)) {
-                numErrors++;
-                log.info("Found Error: " + numErrors);
-                errors.add(parseLine(currentLine));
 
+            Matcher matcher = linePattern.matcher(currentLine);
+            if (matcher.matches()) {
+                numErrors++;
+                log.info("Found Error: " + lineNum);
+                errors.add(parseLine(currentLine, lineNum, pathToLogFile));
             }
         }
         return errors;
     }
 
 
-    private LogError parseLine(String currentLine) {
+    private static LogError parseLine(String currentLine, int lineNum, String pathToLogFile) {
         LogError currentError = new LogError();
         //Create new LogError
         currentError.setLineNumber(lineNum);
         currentError.setSource(pathToLogFile);
 
         currentError.setIsExternal(false);
-        if(currentLine.toUpperCase().matches(".*ERROR.*")) {
+        if (currentLine.toUpperCase().matches(".*ERROR.*")) {
             currentError.setIsExternal(true);
         }
         String[] parse = currentLine.split("- ");
