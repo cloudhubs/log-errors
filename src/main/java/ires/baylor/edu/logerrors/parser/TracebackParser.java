@@ -17,18 +17,14 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class TracebackParser {
 
-	/** Pattern heralds an entry in the trace */
+	/** Pattern of an entry in the trace */
 	private Pattern traceSignature;
-
-	/** Pattern to use to extract the trace for the results */
-	private Pattern traceEntry;
 
 	/**
 	 * Temporary no-arg constructor which matches the POC file
 	 */
 	public TracebackParser() {
-		this(Pattern.compile("File \"([^\"]*)\", line ([0-9]*),.*"),
-				Pattern.compile("File.*[\\n\\r]{1,2}.*", Pattern.MULTILINE));
+		this(Pattern.compile("File \"([^\"]*)\", line ([0-9]*),.*"));
 	}
 
 	/**
@@ -42,18 +38,24 @@ public class TracebackParser {
 	 */
 	public List<String> addTraceback(Scanner errLog) {
 		List<String> traceback = new ArrayList<>();
+		StringBuilder concatenator = new StringBuilder();
 		String line;
-		Matcher match;
 
 		// Get all trace entries
-		while (errLog.hasNext(traceSignature)) {
+		while (errLog.hasNextLine()) {
 			line = errLog.nextLine();
 
-			// Use pattern to extract data from the line
-			match = traceSignature.matcher(line);
-			match.matches();
-			line = errLog.next(traceEntry);
-			traceback.add(line);
+			// Check if the next line was a traceback entry; if not, finish
+			if (traceSignature.matcher(line).matches()) {
+				// Assemble the statement
+				if (errLog.hasNextLine()) {
+					concatenator.append(line).append('\n').append(errLog.nextLine());
+					line = concatenator.toString();
+					concatenator.setLength(0);
+				}
+				traceback.add(line);
+			} else
+				break;
 		}
 
 		return traceback;
