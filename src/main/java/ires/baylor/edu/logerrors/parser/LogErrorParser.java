@@ -41,28 +41,37 @@ public class LogErrorParser {
 
 
         while (scan.hasNextLine()) {
-            nextLine = scan.peekLine();
             lineNum++;
 
             // There are 3 types of lines. Entries, tracebacks and nested notifiers. Check for each and react accordingly
-            if (errorEntryPattern.matcher(nextLine).matches()) {
+            if (errorEntryPattern.matcher(scan.peekLine()).matches()) {
 
                 /** line is considered the beginning of an error. **/
                 log.info("Found Entry: " + lineNum);
                 errors.add(parseLine(scan.nextLine(), lineNum, pathToLogFile));
-            } else if (tracebackEntryPattern.matcher(nextLine).matches()) {
 
-                /** line is the beginning of a traceback segment.**/
-                log.info("Traceback located for error");
-                ArrayList<String> tracebacks = new ArrayList();
-                tracebacks.addAll(addTraceback(scan));
-                errors.get(errors.size() - 1).setTraceBacks(tracebacks);
-            } else if (nestedEntryPattern.matcher(nextLine).matches()) {
+                //Check if there is a traceback. If so update the error message.
+                while (tracebackEntryPattern.matcher(scan.peekLine()).matches()) {
+                    /** line is the beginning of a traceback segment.**/
+                    log.info("Traceback located for error " + scan.peekLine());
+                    LogError deepest = LogErrorParser.getDeepest(errors);
+                    List<String> traceback = addTraceback(scan);
+                    deepest.setErrorMessage(traceback.get(traceback.size() - 1));
+                    deepest.setTraceBacks(traceback);
+                }
+            } else if (nestedEntryPattern.matcher(scan.peekLine()).matches()) {
 
                 /** line is the beginning of a nested segment. **/
                 log.info("Nested exception located for error");
-                // the following lines are to be appended to the last object. In the given file they are all python tracebacks. TODO: update this for new file types.
-                errors.get(errors.size() - 1).setNestedError(new LogError(addNested(scan)));
+                scan.nextLine();
+                log.info("Traceback located for error " + scan.peekLine());
+                LogError deepest = LogErrorParser.getDeepest(errors);
+                LogError deepestNested = new LogError();
+                List<String> traceback = addTraceback(scan);
+                deepestNested.setErrorMessage(traceback.get(traceback.size() - 1));
+                deepestNested.setTraceBacks(traceback);
+                deepest.setNestedError(deepestNested);
+
             } else {
                 // line is not important and can be skipped
                 scan.nextLine();
@@ -139,4 +148,13 @@ public class LogErrorParser {
         return traceback;
     }
 
+    private static LogError getDeepest(List<LogError> errors) {
+        LogError lastError = errors.get(errors.size() - 1);
+
+        while (lastError.getNestedError() != null) {
+            lastError = lastError.getNestedError();
+        }
+
+        return lastError;
+    }
 }
