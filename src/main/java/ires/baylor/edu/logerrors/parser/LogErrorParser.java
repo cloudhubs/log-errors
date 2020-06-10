@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
 
@@ -18,14 +17,14 @@ import java.util.regex.Pattern;
  * Parses a log file into a 2d linked list.
  */
 public class LogErrorParser {
-    final String POC_REGEX = "[0-9]{4}(?:-[0-9]{2}){2} (?:[0-9]{2}:){2}[0-9]{2},[0-9]*? ((?:WARNING)|(?:ERROR)) - (.*?\\.py:[0-9]*?) - (.*)";
-    final String ENTRY_REGEX = "[0-9]{4}(?:-[0-9]{2}){2} (?:[0-9]{2}:){2}[0-9]{2},[0-9]*? ((?:WARNING)|(?:ERROR)|(?:DEBUG)|(?:INFO)) - (.*?\\.py:[0-9]*?) - (.*)";
-    final String TRACEBACK_REGEX = "File \"([^\"]*)\", line ([0-9]*),.*";
-    final String NESTED_REGEX = "During handling of the above exception, another exception occurred:";
-    Pattern errorEntryPattern = Pattern.compile(POC_REGEX);
-    Pattern tracebackExitPattern = Pattern.compile(ENTRY_REGEX);
-    Pattern tracebackEntryPattern = Pattern.compile(TRACEBACK_REGEX);
-    Pattern nestedEntryPattern = Pattern.compile(NESTED_REGEX);
+    final static String POC_REGEX = "[0-9]{4}(?:-[0-9]{2}){2} (?:[0-9]{2}:){2}[0-9]{2},[0-9]*? ((?:WARNING)|(?:ERROR)) - (.*?\\.py:[0-9]*?) - (.*)";
+    final static String ENTRY_REGEX = "[0-9]{4}(?:-[0-9]{2}){2} (?:[0-9]{2}:){2}[0-9]{2},[0-9]*? ((?:WARNING)|(?:ERROR)|(?:DEBUG)|(?:INFO)) - (.*?\\.py:[0-9]*?) - (.*)";
+    final static String TRACEBACK_REGEX = "File \"([^\"]*)\", line ([0-9]*),.*";
+    final static String NESTED_REGEX = "During handling of the above exception, another exception occurred:";
+    static Pattern errorEntryPattern = Pattern.compile(POC_REGEX);
+    static Pattern tracebackExitPattern = Pattern.compile(ENTRY_REGEX);
+    static Pattern tracebackEntryPattern = Pattern.compile(TRACEBACK_REGEX);
+    static Pattern nestedEntryPattern = Pattern.compile(NESTED_REGEX);
 
 
     /**
@@ -34,7 +33,7 @@ public class LogErrorParser {
      * @param pathToLogFile Is the local path to the log file
      * @return A list containing {@link LogError} objects. Which represent the heirarchy of the errors.
      */
-    public List<LogError> parseLog(String pathToLogFile) throws FileNotFoundException {
+    public static List<LogError> parseLog(String pathToLogFile) throws FileNotFoundException {
         PeekableScanner scan = new PeekableScanner(new File(pathToLogFile));
         List<LogError> errors = new ArrayList<>();
         String nextLine;
@@ -75,8 +74,9 @@ public class LogErrorParser {
 
     /**
      * parseLine: tokenizes the line to be populated into the {@link LogError} object
-     * @param currentLine the line to be parsed
-     * @param lineNum the position in the file
+     *
+     * @param currentLine   the line to be parsed
+     * @param lineNum       the position in the file
      * @param pathToLogFile the location on disk
      * @return {@link LogError} is return with populated fields.
      */
@@ -102,20 +102,22 @@ public class LogErrorParser {
 
     /**
      * addNested: begins the parsing for the nested errors. Calls {@inheritDoc addTraceback}
+     *
      * @param errLog the scanner representation of the file
      * @return the parsed string that is the traceback array
      */
-    private List<String> addNested(PeekableScanner errLog) {
+    private static List<String> addNested(PeekableScanner errLog) {
         String line = errLog.nextLine();
         return addTraceback(errLog);
     }
 
     /**
      * addNested: begins the parsing for the nested errors. Calls {@inheritDoc addTraceback}
+     *
      * @param errLog the scanner representation of the file
      * @return the parsed string that is the traceback array
      */
-    private List<String> addTraceback(PeekableScanner errLog) {
+    private static List<String> addTraceback(PeekableScanner errLog) {
         List<String> traceback = new ArrayList<>();
         StringBuilder concatenator = new StringBuilder();
         String line;
