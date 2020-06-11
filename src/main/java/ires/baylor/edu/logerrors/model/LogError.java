@@ -20,4 +20,8 @@ public class LogError {
 
     List<ExternalLink> stackOverflow;
     List<ExternalLink> gitHub;
+
+    public LogError(List<String> traceBacks){
+        this.traceBacks = traceBacks;
+    }
 }
