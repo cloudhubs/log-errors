@@ -13,6 +13,7 @@ public class LogError {
     String source; // path to log file
     int lineNumber; // starting line number within the log file
 
+    Boolean isExternal;
     String errorMessage;
     List<String> traceBacks;
     LogError nestedError;
