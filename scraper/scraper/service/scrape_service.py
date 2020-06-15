@@ -4,9 +4,8 @@ from queue import Queue
 
 keys = ['RGaU7lYPN8L5KbnIfkxmGQ((', '1yfsxJa1AC*GlxN6RSemCQ((']
 
-
 def init_scrape(language: str):
-    posts = scrape_meta(language)
+    posts = scrape_parent_links(language)
 
     print(posts)
 
@@ -17,7 +16,7 @@ def init_scrape(language: str):
     scraper.start(link_queue)
 
 
-def scrape_meta(language: str):
+def scrape_parent_links(language: str):
     language_tag = ""
 
     # pick correct language
