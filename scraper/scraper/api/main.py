@@ -37,7 +37,7 @@ def scrape_language(language: str):
 # TODO: implement tags in the query string
 @application.route("/scrape-parent/<language>", methods=['POST'])
 @cross_origin()
-def scrape_language(language: str):
+def scrape_parent_language(language: str):
     # only support for 3 languages
     if language not in accepted_languages:
         return Response("<p>Invalid Language, must be of the form csharp, java, python</p>", status=422)

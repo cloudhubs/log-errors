@@ -18,7 +18,8 @@ import inspect
 class StackOversight(object):
 
     def __init__(self, client_keys: list, proxy=None):
-        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+            threading.get_ident()))
 
         if proxy:
             # address of the proxy server
