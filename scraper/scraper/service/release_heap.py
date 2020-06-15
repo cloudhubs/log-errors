@@ -18,7 +18,7 @@ class ReleaseHeap(object):
     """
 
     def __init__(self, elem_list: list, time_sec: int):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         # init the heap and queue and assign variables
         heapq.heapify(elem_list)
         self.heap = elem_list
@@ -35,7 +35,7 @@ class ReleaseHeap(object):
         return self.heap[0][1]
 
     def capture(self):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         # pop off the top of the heap and increment the first value of the pair
         pair = heapq.heappop(self.heap)
         pair[0] += 1
@@ -50,7 +50,7 @@ class ReleaseHeap(object):
         return pair[0]
 
     def release(self):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         # get the id of the next to be released and with that the pair
         top_value = self.release_queue.get()
         pair = self.hash_map[top_value]

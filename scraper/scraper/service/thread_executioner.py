@@ -14,7 +14,7 @@ import inspect
 class ThreadExecutioner:
     @staticmethod
     def mass_murder(victims: Queue):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         try:
             while True:
                 victim = victims.get(block=True)
@@ -26,7 +26,7 @@ class ThreadExecutioner:
 
     @staticmethod
     def murder(victim: threading.Thread):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         alive = victim.is_alive()
         if alive:
             if not ctypes.pythonapi.PyThreadState_SetAsyncExc(victim, ctypes.py_object(SystemExit)):
@@ -37,7 +37,7 @@ class ThreadExecutioner:
 
     @staticmethod
     def execute(target, tasks: Queue, *args):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         hit_queue = Queue()
         thread_killer = threading.Thread(target=ThreadExecutioner.mass_murder, args=[hit_queue], daemon=True)
         # thread_killer.start()

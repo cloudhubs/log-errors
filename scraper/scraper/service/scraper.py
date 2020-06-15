@@ -1,5 +1,6 @@
-# To set the http_proxy environment variable
 from __future__ import print_function
+# To set the http_proxy environment variable
+import os
 
 # For making the site requests and overall request management
 from scraper.service.stack_overflow import StackOverflow
@@ -13,13 +14,11 @@ import json
 from scraper.service.thread_executioner import ThreadExecutioner
 import inspect
 
-import os
-
 
 class StackOversight(object):
 
     def __init__(self, client_keys: list, proxy=None):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
 
         if proxy:
             # address of the proxy server
@@ -31,6 +30,7 @@ class StackOversight(object):
             os.environ['https_proxy'] = proxy
             os.environ['HTTPS_PROXY'] = proxy
 
+        # self.site = StackOverflow()
         self.site = StackOverflow(client_keys)
 
         self.thread_handles = []
@@ -40,7 +40,8 @@ class StackOversight(object):
         self.text_lock = threading.Lock()
 
     def start(self, parent_link_queue: Queue, code_file_name='code.txt', text_file_name='text.txt'):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+            threading.get_ident()))
         code_io_handle = open(code_file_name, 'w')
         text_io_handle = open(text_file_name, 'w')
 
@@ -146,16 +147,3 @@ class StackOversight(object):
         except SystemExit:
             print()
             # TODO: logging
-
-# # for debugging only
-# keys = ['RGaU7lYPN8L5KbnIfkxmGQ((', '1yfsxJa1AC*GlxN6RSemCQ((']
-#
-# python_posts = StackOverflow.create_parent_link(sort=StackOverflow.Sorts.votes.value,
-#                                                 order=StackOverflow.Orders.descending.value,
-#                                                 tag=StackOverflow.Tags.python.value, page_size=100)
-#
-# link_queue = Queue()
-# link_queue.put(python_posts)
-#
-# scraper = StackOversight(keys)
-# scraper.start(link_queue)

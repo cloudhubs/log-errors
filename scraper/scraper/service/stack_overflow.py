@@ -13,7 +13,7 @@ import inspect
 
 
 class StackOverflow(Site):
-    print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+    print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
     site = 'stackoverflow'
     api_url = 'https://api.stackexchange.com'
     api_version = '2.2'
@@ -64,13 +64,13 @@ class StackOverflow(Site):
         csharp = 'c#'
 
     def __init__(self, client_keys: list):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         sessions = [self.init_key(key) for key in client_keys]
 
         super(StackOverflow, self).__init__(sessions, self.timeout_sec, self.limit)
 
     def get_child_links(self, parent_link: str, pause=False, pause_time=None):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         response = self.process_request(parent_link, pause, pause_time)
         # TODO: handle None response
         key = response[1]
@@ -97,7 +97,7 @@ class StackOverflow(Site):
 
     # as a hook for future needs
     def handle_request(self, url: str, key: str):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         url = f'{url}&{self.fields["key"]}={key}'
 
         # TODO: have this function return None if it has already been scraped
@@ -108,7 +108,7 @@ class StackOverflow(Site):
 
     @staticmethod
     def create_parent_link(method=Methods.question.value, **kwargs):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         url = f'{StackOverflow.api_url}/{StackOverflow.api_version}/{method}'
 
         kwargs['site'] = StackOverflow.site
@@ -130,7 +130,7 @@ class StackOverflow(Site):
 
     @staticmethod
     def init_key(key: str):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         response = requests.get(f'{StackOverflow.api_url}/{StackOverflow.api_version}/'
                                 f'{StackOverflow.Methods.info.value}{StackOverflow.fields["site"]}='
                                 f'{StackOverflow.site}&{StackOverflow.fields["key"]}={key}').json()
@@ -142,7 +142,7 @@ class StackOverflow(Site):
 
     @staticmethod
     def get_text(response: requests.Response):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         try:
             return [element.get_text() for element in Site.cook_soup(response).find_all(attrs={'class': 'post-text'})]
         except:
@@ -151,7 +151,7 @@ class StackOverflow(Site):
 
     @staticmethod
     def get_code(response: requests.Response):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         try:
             return [element.get_text() for element in Site.cook_soup(response).find_all('code')]
         except:
@@ -160,5 +160,5 @@ class StackOverflow(Site):
 
     @staticmethod
     def get_min_pause():
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         return StackOverflow.min_pause

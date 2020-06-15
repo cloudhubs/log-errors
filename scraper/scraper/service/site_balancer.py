@@ -23,5 +23,5 @@ class SiteBalancer(ReleaseHeap):
         return client_id
 
     def is_ready(self):
-        print("my name is '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
+        print("Function -> '{}'\t".format(inspect.currentframe().f_code.co_name) + str(threading.get_ident()))
         return not self.limit or self.heap[0][0] < self.limit
