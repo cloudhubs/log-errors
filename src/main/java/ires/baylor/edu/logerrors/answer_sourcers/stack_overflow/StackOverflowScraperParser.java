@@ -28,7 +28,7 @@ public class StackOverflowScraperParser {
 	 * Parses the JSON response stored in the given string into a usable object
 	 * format.
 	 * 
-	 * @param inData The JSON statement to parse
+	 * @param data The JSON statement to parse
 	 * @return A list of {@link StackOverflowQuestion StackOverflowQuestions} that
 	 *         represents the data in the provided string, or null if an error
 	 *         occurred.
@@ -47,7 +47,7 @@ public class StackOverflowScraperParser {
 	 * Parses the JSON response stored in the given reader into a usable object
 	 * format.
 	 * 
-	 * @param inData The reader containing the JSON statement to parse
+	 * @param data The reader containing the JSON statement to parse
 	 * @return A list of {@link StackOverflowQuestion StackOverflowQuestions} that
 	 *         represents the data in the provided reader, or null if an error
 	 *         occurred.
