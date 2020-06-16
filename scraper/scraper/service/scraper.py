@@ -51,16 +51,15 @@ class StackOversight(object):
         child_link_queue = Queue()
         kill = threading.Event()
 
-        parent_link_thread = threading.Thread(target=ThreadExecutioner.execute,
-                                              args=(
-                                                  self.scrape_parent_links, parent_link_queue, self.site,
-
-                                                  child_link_queue, kill))
+        # start a thread on the execute function, pass it the parent link as a seed, and the child link queue to feed
+        # into
+        parent_link_thread = threading.Thread(target=ThreadExecutioner.execute, args=(
+            self.scrape_parent_link, parent_link_queue, self.site, child_link_queue, kill))
         parent_link_thread.setName("StackExchange API Manager")
 
-        child_link_thread = threading.Thread(target=ThreadExecutioner.execute,
-                                             args=(self.scrape_child_links, child_link_queue, self.site, code_io_handle,
-                                                   text_io_handle, kill))
+        # start a thread on the execute function, pass it an empty list to start on
+        child_link_thread = threading.Thread(target=ThreadExecutioner.execute, args=(
+            self.scrape_child_link, child_link_queue, self.site, code_io_handle, text_io_handle, kill))
         child_link_thread.setName("StackOverflow Scraping Manager")
 
         self.thread_handles.extend((parent_link_thread, child_link_thread))
@@ -68,6 +67,7 @@ class StackOversight(object):
         for handle in self.thread_handles:
             handle.start()
 
+        # block here until the lists are empty
         kill.wait()
 
         for handle in self.thread_handles:
@@ -89,6 +89,8 @@ class StackOversight(object):
     @staticmethod
     def scrape_parent_link(link: str, used_parents: Queue, site: StackOverflow, output_queue: Queue,
                            failure: threading.Event):
+        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+            threading.get_ident()))
         try:
             has_more = True
             while has_more:
@@ -117,6 +119,8 @@ class StackOversight(object):
     @staticmethod
     def scrape_child_link(self, link: str, used_children: Queue, site: StackOverflow, code_io_handle, text_io_handle,
                           failure: threading.Event):
+        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+            threading.get_ident()))
         try:
             # TODO: thread this point on in this method for each link
             # TODO: handle None response

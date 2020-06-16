@@ -5,6 +5,7 @@ from queue import Queue
 keys = ['RGaU7lYPN8L5KbnIfkxmGQ((', '1yfsxJa1AC*GlxN6RSemCQ((']
 
 def init_scrape(language: str):
+    # returns a link to a list of SO posts
     posts = scrape_parent_links(language)
 
     print(posts)
@@ -13,6 +14,8 @@ def init_scrape(language: str):
     link_queue.put(posts)
 
     scraper = StackOversight(keys)
+
+    # start the scraper on that first link
     scraper.start(link_queue)
 
 

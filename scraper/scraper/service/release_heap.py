@@ -10,7 +10,6 @@ from queue import Queue
 import inspect
 
 
-
 class ReleaseHeap(object):
     """
         elem_list must be a list of mutable tuples!

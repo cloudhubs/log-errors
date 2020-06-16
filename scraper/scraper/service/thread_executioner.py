@@ -42,19 +42,18 @@ class ThreadExecutioner:
         print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
             threading.get_ident()))
         hit_queue = Queue()
+        # Thread killer is for killing the parent or child thread once they run out of links.
         thread_killer = threading.Thread(target=ThreadExecutioner.mass_murder, args=[hit_queue], daemon=True)
-        # thread_killer.start()
+        # This will not kill any threads until they are stalled
+        thread_killer.start()
 
         try:
             while True:
-                if not isinstance(tasks, Queue):
-                    print(str(threading.get_ident()) + ": " + str(tasks))
-                    # time.sleep(5)
-                else:
-                    task = tasks.get(block=True)
-                    print(task)
+                # Iterate through the links of the queue passed in and parse them using the target function passed in
+                task = tasks.get(block=True)
+                print(task)
 
-                    threading.Thread(target=target, args=(task, hit_queue, *args), daemon=True)
+                threading.Thread(target=target, args=(task, hit_queue, *args), daemon=True)
 
         except SystemExit:
             ThreadExecutioner.murder(thread_killer)
