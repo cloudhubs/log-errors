@@ -3,7 +3,7 @@ from __future__ import print_function
 import os
 
 # For making the site requests and overall request management
-from scraper.service.stack_overflow import StackOverflow
+from service.stack_overflow import StackOverflow
 # For child link queue
 from queue import Queue
 # For threading the scraping process
@@ -11,7 +11,7 @@ import threading
 # For serialization
 import json
 # For thread management
-from scraper.service.thread_executioner import ThreadExecutioner
+from service.thread_executioner import ThreadExecutioner
 import inspect
 
 
@@ -53,12 +53,12 @@ class StackOversight(object):
 
         # start a thread on the execute function, pass it the parent link as a seed, and the child link queue to feed
         # into
-        parent_link_thread = threading.Thread(target=ThreadExecutioner.execute, args=(
+        parent_link_thread = threading.Thread(target=ThreadExecutioner.executeParent, args=(
             self.scrape_parent_link, parent_link_queue, self.site, child_link_queue, kill))
         parent_link_thread.setName("StackExchange API Manager")
 
         # start a thread on the execute function, pass it an empty list to start on
-        child_link_thread = threading.Thread(target=ThreadExecutioner.execute, args=(
+        child_link_thread = threading.Thread(target=ThreadExecutioner.executeChild, args=(
             self.scrape_child_link, child_link_queue, self.site, code_io_handle, text_io_handle, kill))
         child_link_thread.setName("StackOverflow Scraping Manager")
 

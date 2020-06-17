@@ -1,5 +1,5 @@
-from scraper.service.scraper import StackOversight
-from scraper.service.stack_overflow import StackOverflow
+from service.scraper import StackOversight
+from service.stack_overflow import StackOverflow
 from queue import Queue
 
 keys = ['RGaU7lYPN8L5KbnIfkxmGQ((', '1yfsxJa1AC*GlxN6RSemCQ((']

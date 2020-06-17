@@ -2,7 +2,7 @@
 from __future__ import print_function
 
 import threading
-from scraper.service.site import Site
+from service.site import Site
 # For site tags and sorts
 from enum import Enum
 # For proxy exception

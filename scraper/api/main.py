@@ -3,8 +3,7 @@ from flask import Flask, jsonify, request, Response
 # To rectify cors errors
 from flask_cors import cross_origin, CORS
 # for scraping
-import scraper
-from scraper.service.scrape_service import init_scrape, scrape_parent_links
+from service.scrape_service import init_scrape, scrape_parent_links
 
 application = Flask(__name__)
 cors = CORS(application)

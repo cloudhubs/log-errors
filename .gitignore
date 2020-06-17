@@ -32,8 +32,12 @@ build/
 
 ### Python ###
 venv/*
+scraper/venv/*
+
 *.pyc
 
 ### General ###
 *.txt
 !requirements.txt
+
+! .gitignore

@@ -10,7 +10,7 @@ import time
 # To parse the HTML documents
 from bs4 import BeautifulSoup
 # For balancing client requests to the site
-from scraper.service.site_balancer import SiteBalancer
+from service.site_balancer import SiteBalancer
 import inspect
 
 
