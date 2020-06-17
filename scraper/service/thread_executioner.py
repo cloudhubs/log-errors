@@ -53,7 +53,9 @@ class ThreadExecutioner:
                 task = tasks.get(block=True)
                 print(task)
 
-                threading.Thread(target=target, args=(task, hit_queue, *args), daemon=True)
+                parent_threader = threading.Thread(target=target, args=(task, hit_queue, *args), daemon=True)
+                parent_threader.setName("parent-threader: of " + str(threading.get_ident()))
+                parent_threader.start()
 
         except SystemExit:
             ThreadExecutioner.murder(thread_killer)

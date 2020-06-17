@@ -91,6 +91,9 @@ class StackOversight(object):
                            failure: threading.Event):
         print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
             threading.get_ident()))
+        print(
+            "Function -> " + inspect.currentframe().f_code.co_name + "\t\t Thread -> " + str(
+                threading.get_ident()))
         try:
             has_more = True
             while has_more:

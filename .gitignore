@@ -32,3 +32,8 @@ build/
 
 ### Python ###
 venv/*
+*.pyc
+
+### General ###
+*.txt
+!requirements.txt

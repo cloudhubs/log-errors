@@ -14,7 +14,7 @@ import inspect
 
 class StackOverflow(Site):
     print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        threading.get_ident()))
     site = 'stackoverflow'
     api_url = 'https://api.stackexchange.com'
     api_version = '2.2'
