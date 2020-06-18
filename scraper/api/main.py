@@ -29,7 +29,7 @@ def scrape_language(language: str):
         return Response("<p>Invalid Language, must be of the form csharp, java, python</p>", status=422)
 
     # begin the scraping process
-    init_scrape(language)
+    working_thread = init_scrape(language)
     return request.json
 
 

@@ -1,3 +1,5 @@
+import threading
+
 from service.scraper import StackOversight
 from service.stack_overflow import StackOverflow
 from queue import Queue
@@ -8,7 +10,7 @@ def init_scrape(language: str):
     # returns a link to a list of SO posts
     posts = scrape_parent_links(language)
 
-    print(posts)
+    # print(posts)
 
     link_queue = Queue()
     link_queue.put(posts)
@@ -16,7 +18,10 @@ def init_scrape(language: str):
     scraper = StackOversight(keys)
 
     # start the scraper on that first link
-    scraper.start(link_queue)
+    thread = threading.Thread(target=scraper.start, args=(link_queue,), daemon=False)
+    thread.start()
+
+    return thread
 
 
 def scrape_parent_links(language: str):
