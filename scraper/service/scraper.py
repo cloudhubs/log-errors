@@ -59,7 +59,7 @@ class StackOversight(object):
 
         # start a thread on the execute function, pass it an empty list to start on
         child_link_thread = threading.Thread(target=ThreadExecutioner.executeChild, args=(
-            self.scrape_child_link, child_link_queue, self.site, code_io_handle, text_io_handle, kill))
+            self.scrape_child_link, child_link_queue, self.site, code_io_handle, text_io_handle, kill, self))
         child_link_thread.setName("StackOverflow Scraping Manager")
 
         self.thread_handles.extend((parent_link_thread, child_link_thread))

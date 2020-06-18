@@ -64,7 +64,7 @@ class ThreadExecutioner:
             print('Done scraping parent links')
 
     @staticmethod
-    def executeChild(target, tasks: Queue, site, code_io_handle, text_io_handle, kill):
+    def executeChild(target, tasks: Queue, site, code_io_handle, text_io_handle, kill, other_self):
         print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
             threading.get_ident()))
         hit_queue = Queue()
@@ -82,7 +82,7 @@ class ThreadExecutioner:
                 # , *args)
 
                 parent_threader = threading.Thread(target=target,
-                                                   args=(task, hit_queue, site, code_io_handle, text_io_handle, kill),
+                                                   args=(other_self, task, hit_queue, site, code_io_handle, text_io_handle, kill),
                                                    daemon=True)
                 parent_threader.setName("parent-threader: of " + str(threading.get_ident()))
                 parent_threader.start()
