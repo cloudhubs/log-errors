@@ -3,6 +3,8 @@ from __future__ import print_function
 import os
 
 # For making the site requests and overall request management
+from pymongo import MongoClient
+
 from service.stack_overflow import StackOverflow
 # For child link queue
 from queue import Queue
@@ -39,6 +41,7 @@ class StackOversight(object):
 
         self.code_lock = threading.Lock()
         self.text_lock = threading.Lock()
+        self.tag_lock = threading.Lock()
 
     def start(self, parent_link_queue: Queue, code_file_name='code.txt', text_file_name='text.txt'):
         print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
@@ -124,6 +127,11 @@ class StackOversight(object):
                           failure: threading.Event):
         print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
             threading.get_ident()))
+
+        code = "{\'code\': ["
+        text = "\'text\': ["
+        text = "\'tags\': ["
+
         try:
             # TODO: thread this point on in this method for each link
             # TODO: handle None response
@@ -136,19 +144,14 @@ class StackOversight(object):
                 failure.set()
                 raise
 
-            for code in site.get_code(response):
-                snippet = {'snippet': code}
+            data = {'url': link, 'code': site.get_code(response), 'text': site.get_text(response),
+                    'tags': site.get_tags(response)}
 
-                with self.code_lock:
-                    json.dump(snippet, code_io_handle)
-                    # code_io_handle.write(code)
-
-            for text in site.get_text(response):
-                snippet = {'snippet': text}
-
-                with self.text_lock:
-                    json.dump(snippet, text_io_handle)
-                    # text_io_handle.write(text)
+            # response = requests.post("https://localhost:5001/mongo/test/add", data=json.dumps(data))
+            print(data)
+            response = MongoClient().testdb.coll_name.insert_one(data)
+            if "200" not in response:
+                raise ValueError
 
             used_children.put(threading.current_thread())
 

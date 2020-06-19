@@ -9,19 +9,20 @@ from bson.json_util import loads
 db_controller = Blueprint('db_controller', __name__, template_folder='template')
 cors = CORS(db_controller)
 
+app = Flask(__name__)
 
 def getSession():
     con = MongoClient()
     return con
 
 
-@db_controller.route("/mongo", methods=['GET'])
+@app.route("/mongo", methods=['GET'])
 @cross_origin()
 def home():
     return "<p>Hello to the database api</p>"
 
 
-@db_controller.route("/mongo/test/add", methods=['GET'])
+@app.route("/mongo/test/add", methods=['POST'])
 @cross_origin()
 def test_add():
     con = getSession()
@@ -39,7 +40,7 @@ def test_add():
     return "200"
 
 
-@db_controller.route('/mongo/test/find')
+@app.route('/mongo/test/find', methods=['GET'])
 @cross_origin()
 def get_all_errors():
     con = getSession()
@@ -48,7 +49,7 @@ def get_all_errors():
     return dumps(data)
 
 
-@db_controller.route('/mongo/test/empty')
+@app.route('/mongo/test/empty', methods=['POST'])
 @cross_origin()
 def delete_all_errors():
     con = getSession()
@@ -56,3 +57,6 @@ def delete_all_errors():
     con.testdb.coll_name.delete_many(myquery)
 
     return dumps("OK")
+
+if __name__ == "__main__":
+    app.run(debug=True, port="5001")

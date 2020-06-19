@@ -10,6 +10,7 @@ import requests
 # Need that mutable tuple my dude
 from recordclass.mutabletuple import mutabletuple
 import inspect
+import re
 
 
 class StackOverflow(Site):
@@ -171,3 +172,12 @@ class StackOverflow(Site):
         print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
             threading.get_ident()))
         return StackOverflow.min_pause
+
+    @staticmethod
+    def get_tags(response: requests.Response):
+        try:
+            return [element.get_text() for element in
+                    Site.cook_soup(response).find_all("a", href=re.compile('/questions/tagged/'))]
+        except:
+            # can fail when none are found
+            return []

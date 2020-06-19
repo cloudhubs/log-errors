@@ -7,12 +7,14 @@ from service.scrape_service import init_scrape, scrape_parent_links
 
 scrape_controller = Blueprint('scrape_controller', __name__, template_folder='templates')
 cors = CORS(scrape_controller)
+app = Flask(__name__)
+
 
 accepted_languages = ["csharp", "java", "python"]
 
 
 # Default scraper route
-@scrape_controller.route("/scrape")
+@app.route("/scrape")
 @cross_origin()
 def home():
     return "Hello! Welcome to the scraper api. "
@@ -21,7 +23,7 @@ def home():
 # This method is used to start the scraping process on a given language with given tags.
 # These tags are used to get more specific results
 # TODO: implement tags in the query string
-@scrape_controller.route("/scrape/<language>", methods=['POST'])
+@app.route("/scrape/<language>", methods=['POST'])
 @cross_origin()
 def scrape_language(language: str):
     # only support for 3 languages
@@ -34,7 +36,7 @@ def scrape_language(language: str):
 
 
 # TODO: implement tags in the query string
-@scrape_controller.route("/scrape-meta/<language>", methods=['POST'])
+@app.route("/scrape-meta/<language>", methods=['POST'])
 @cross_origin()
 def scrape_parent_language(language: str):
     # only support for 3 languages
@@ -46,8 +48,11 @@ def scrape_parent_language(language: str):
     # return request.json
 
 
-@scrape_controller.route("/please_stop", methods=['POST'])
+@app.route("/please_stop", methods=['POST'])
 @cross_origin()
 def stop_scrape():
     # STOP
     raise NotImplementedError
+
+if __name__ == "__main__":
+    app.run(debug=True, port="5000")
