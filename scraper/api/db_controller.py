@@ -27,13 +27,13 @@ def testAdd():
     con = getSession()
     my_coll = con.testdb.coll_name
 
-    people = [{"_id:": "", "name": "Bilbo Baggins", "age": 50}, {"_id:": "", "name": "Gandalf", "age": 1000},
-              {"_id:": "", "name": "Thorin", "age": 195}, {"_id:": "", "name": "Balin", "age": 178},
-              {"_id:": "", "name": "Kili", "age": 77}, {"_id:": "", "name": "Dwalin", "age": 169},
-              {"_id:": "", "name": "Oin", "age": 167}, {"_id:": "", "name": "Gloin", "age": 158},
-              {"_id:": "", "name": "Fili", "age": 82}, {"_id:": "", "name": "Bombur", "age": None}]
+    # people = [{"_id:": "", "name": "Bilbo Baggins", "age": 50}, {"_id:": "", "name": "Gandalf", "age": 1000},
+    #           {"_id:": "", "name": "Thorin", "age": 195}, {"_id:": "", "name": "Balin", "age": 178},
+    #           {"_id:": "", "name": "Kili", "age": 77}, {"_id:": "", "name": "Dwalin", "age": 169},
+    #           {"_id:": "", "name": "Oin", "age": 167}, {"_id:": "", "name": "Gloin", "age": 158},
+    #           {"_id:": "", "name": "Fili", "age": 82}, {"_id:": "", "name": "Bombur", "age": None}]
 
-    recordid = my_coll.insert_many(people)
+    recordid = my_coll.insert_many(request.json)
 
     con.close()
     return "200"
