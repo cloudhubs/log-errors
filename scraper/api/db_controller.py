@@ -23,7 +23,7 @@ def home():
 
 @db_controller.route("/mongo/test/add", methods=['GET'])
 @cross_origin()
-def testAdd():
+def test_add():
     con = getSession()
     my_coll = con.testdb.coll_name
 
