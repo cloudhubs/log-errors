@@ -53,7 +53,7 @@ public class StackOverflowScraperMatcher {
         StackOverflowScraperParser parser = new StackOverflowScraperParser();
 //        Reader reader = new FileReader(parameters.getPathToscraper());
         mongoConnector db = new mongoConnector();
-        List<Document> documents = db.getAllFrom(db.getCollection("testdb")); //.forEach((System.out::println));
+        List<Document> documents = db.getAllFrom(db.getCollection("coll_name")); //.forEach((System.out::println));
         List<StackOverflowQuestion> questions = null;// = parser.parseQuestions(reader);
 
         return fuzzyMatching(questions, parameters.getCurrentError());
