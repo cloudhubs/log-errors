@@ -1,16 +1,17 @@
-package ires.baylor.edu.logerrors.answer_sourcers.stack_overflow;
+package ires.baylor.edu.logerrors.matcher;
 
+import com.mongodb.client.MongoDatabase;
 import ires.baylor.edu.logerrors.model.LogError;
-import ires.baylor.edu.logerrors.util.PeekableScanner;
 import lombok.extern.slf4j.Slf4j;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import org.bson.Document;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Finds multiple matches from the Stack Overflow scraped data to the Log Error given
@@ -50,8 +51,10 @@ public class StackOverflowScraperMatcher {
      */
     public static List<StackOverflowQuestion> matchLog(TempControllerParametersNoDB parameters) throws FileNotFoundException {
         StackOverflowScraperParser parser = new StackOverflowScraperParser();
-        Reader reader = new FileReader(parameters.getPathToscraper());
-        List<StackOverflowQuestion> questions = parser.parseQuestions(reader);
+//        Reader reader = new FileReader(parameters.getPathToscraper());
+        mongoConnector db = new mongoConnector();
+        List<Document> documents = db.getAllFrom(db.getCollection("testdb")); //.forEach((System.out::println));
+        List<StackOverflowQuestion> questions = null;// = parser.parseQuestions(reader);
 
         return fuzzyMatching(questions, parameters.getCurrentError());
     }

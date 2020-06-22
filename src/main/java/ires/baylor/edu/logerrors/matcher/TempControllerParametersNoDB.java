@@ -1,4 +1,4 @@
-package ires.baylor.edu.logerrors.answer_sourcers.stack_overflow;
+package ires.baylor.edu.logerrors.matcher;
 
 import ires.baylor.edu.logerrors.model.LogError;
 import lombok.*;
@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @ToString
 public class TempControllerParametersNoDB {
-    String pathToscraper; // path to scraper output
+    String pathToScraper; // path to scraper output
     LogError currentError; //Current error being matched
+    Double variance; // leeway on matcher
 }

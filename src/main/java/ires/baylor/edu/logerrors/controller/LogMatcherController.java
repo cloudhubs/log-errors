@@ -1,9 +1,7 @@
 package ires.baylor.edu.logerrors.controller;
 
-import ires.baylor.edu.logerrors.answer_sourcers.stack_overflow.StackOverflowScraperMatcher;
-import ires.baylor.edu.logerrors.answer_sourcers.stack_overflow.TempControllerParametersNoDB;
-import ires.baylor.edu.logerrors.model.ResolveErrorsRequest;
-import ires.baylor.edu.logerrors.parser.LogErrorParser;
+import ires.baylor.edu.logerrors.matcher.StackOverflowScraperMatcher;
+import ires.baylor.edu.logerrors.matcher.TempControllerParametersNoDB;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

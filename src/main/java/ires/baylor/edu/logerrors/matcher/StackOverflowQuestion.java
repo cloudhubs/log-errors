@@ -1,4 +1,4 @@
-package ires.baylor.edu.logerrors.answer_sourcers.stack_overflow;
+package ires.baylor.edu.logerrors.matcher;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
