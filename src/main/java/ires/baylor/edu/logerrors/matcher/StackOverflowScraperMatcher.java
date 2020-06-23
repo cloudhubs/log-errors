@@ -43,19 +43,45 @@ public class StackOverflowScraperMatcher {
     }
 
     /**
+     * Basic substring matching using text found from SO and data from the MongoDB
+     * @param SOFromDB
+     * @param logToMatch
+     * @return
+     */
+    public static List<ScraperObject> TextMatching(List<ScraperObject> SOFromDB, LogError logToMatch)  {
+        List<ScraperObject> returnList = new ArrayList<>();
+        String logErrorMsg = logToMatch.getErrorMessage();
+        for(ScraperObject soq: SOFromDB) {
+            for(String text: soq.getText()) {
+                if(text.toUpperCase().contains(logErrorMsg.toUpperCase())) {
+                    returnList.add(soq);
+                    break;
+                }
+            }
+        }
+        if(returnList.isEmpty()) {
+            log.info("No valid results found - Continue parsing original error message");
+        }
+        return returnList;
+    }
+    /**
      * Receives the path to a scraper file (Changed when database is created) and the current error
      * Calls the FuzzyMatching method to find the similar results
      * @param parameters Path to scraper file and current LogError
      * @return a list of StackOverflowQuestions that match the LogError given
      * @throws FileNotFoundException if the file cannot be opened
      */
-    public static List<StackOverflowQuestion> matchLog(TempControllerParametersNoDB parameters) throws FileNotFoundException {
-        StackOverflowScraperParser parser = new StackOverflowScraperParser();
-//        Reader reader = new FileReader(parameters.getPathToscraper());
+    public static List<ScraperObject> matchLog(TempControllerParametersNoDB parameters) throws FileNotFoundException {
         mongoConnector db = new mongoConnector();
         List<Document> documents = db.getAllFrom(db.getCollection("coll_name")); //.forEach((System.out::println));
-        List<StackOverflowQuestion> questions = null;// = parser.parseQuestions(reader);
 
-        return fuzzyMatching(questions, parameters.getCurrentError());
+        List<ScraperObject> obj = convertDocument(documents);
+        return TextMatching(obj, parameters.getCurrentError());
+    }
+
+    private static List<ScraperObject> convertDocument(List<Document> documents) {
+        List<ScraperObject> scraper = new ArrayList<>();
+        documents.forEach(d -> scraper.add(new ScraperObject(d)));
+        return scraper;
     }
 }
