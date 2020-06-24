@@ -168,6 +168,16 @@ class StackOverflow(Site):
             return []
 
     @staticmethod
+    def get_title(response: requests.Response):
+        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+            threading.get_ident()))
+        try:
+            return Site.cook_soup(response).find_all('title')
+        except:
+            # no title?
+            return []
+
+    @staticmethod
     def get_min_pause():
         print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
             threading.get_ident()))
