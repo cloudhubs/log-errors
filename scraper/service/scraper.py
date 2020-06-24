@@ -144,10 +144,10 @@ class StackOversight(object):
                 failure.set()
                 raise
 
-            data = {'url': link, 'code': site.get_code(response), 'text': site.get_text(response),
+            data = {'url': link, 'title': site.get_title(response), 'code': site.get_code(response),
+                    'text': site.get_text(response),
                     'tags': site.get_tags(response)}
 
-            # response = requests.post("https://localhost:5001/mongo/test/add", data=json.dumps(data))
             print(data)
             response = MongoClient().testdb.coll_name.insert_one(data)
             if "200" not in response:
