@@ -186,8 +186,8 @@ class StackOverflow(Site):
     @staticmethod
     def get_tags(response: requests.Response):
         try:
-            return [element.get_text() for element in
-                    Site.cook_soup(response).find_all("a", href=re.compile('/questions/tagged/'))]
+            return list(set([element.get_text() for element in
+                    Site.cook_soup(response).find_all("a", href=re.compile('/questions/tagged/'))]))
         except:
             # can fail when none are found
             return []
