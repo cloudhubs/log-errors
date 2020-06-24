@@ -3,6 +3,8 @@ from __future__ import print_function
 import os
 
 # For making the site requests and overall request management
+import time
+
 from pymongo import MongoClient
 
 from service.stack_overflow import StackOverflow
@@ -15,13 +17,14 @@ import json
 # For thread management
 from service.thread_executioner import ThreadExecutioner
 import inspect
+import sys
 
 
 class StackOversight(object):
 
     def __init__(self, client_keys: list, proxy=None):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
 
         if proxy:
             # address of the proxy server
@@ -44,8 +47,8 @@ class StackOversight(object):
         self.tag_lock = threading.Lock()
 
     def start(self, parent_link_queue: Queue, code_file_name='code.txt', text_file_name='text.txt'):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         code_io_handle = open(code_file_name, 'w')
         text_io_handle = open(text_file_name, 'w')
 
@@ -92,11 +95,11 @@ class StackOversight(object):
     @staticmethod
     def scrape_parent_link(link: str, used_parents: Queue, site: StackOverflow, output_queue: Queue,
                            failure: threading.Event):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
-        print(
-            "Function -> " + inspect.currentframe().f_code.co_name + "\t\t Thread -> " + str(
-                threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
+        # print(
+        #     "Function -> " + inspect.currentframe().f_code.co_name + "\t\t Thread -> " + str(
+        #         threading.get_ident()))
         try:
             has_more = True
             while has_more:
@@ -116,6 +119,7 @@ class StackOversight(object):
                 list(map(output_queue.put, response))
 
                 if not has_more:
+                    print(threading.get_ident(), " parent")
                     used_parents.put(threading.currentThread())
                     break
         except SystemExit:
@@ -125,34 +129,40 @@ class StackOversight(object):
     @staticmethod
     def scrape_child_link(self, link: str, used_children: Queue, site: StackOverflow, code_io_handle, text_io_handle,
                           failure: threading.Event):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
 
-        code = "{\'code\': ["
-        text = "\'text\': ["
-        text = "\'tags\': ["
-
+        again = True
         try:
-            # TODO: thread this point on in this method for each link
-            # TODO: handle None response
-            try:
-                response = site.process_request(link, pause=True)[0]
-            except SystemExit:
-                raise
-            except:
-                # TODO: logging
-                failure.set()
-                raise
+            while again:
 
-            data = {'url': link, 'title': site.get_title(response), 'code': site.get_code(response),
-                    'text': site.get_text(response),
-                    'tags': site.get_tags(response)}
+                # TODO: thread this point on in this method for each link
+                # TODO: handle None response
+                try:
+                    response = site.process_request(link, pause=True)[0]
+                except SystemExit:
+                    raise
+                except:
+                    # TODO: logging
+                    failure.set()
+                    raise
 
-            print(data)
-            response = MongoClient().testdb.coll_name.insert_one(data)
-            if "200" not in response:
-                raise ValueError
+                print(response)
+                if response.status_code != 200:
+                    sys.stderr.write(response.text)
+                    time.sleep(300)
+                    continue
+                else:
+                    again = False
 
+                data = {'url': link, 'title': site.get_title(response), 'code': site.get_code(response),
+                        'text': site.get_text(response),
+                        'tags': site.get_tags(response)}
+
+                print(data)
+                response = MongoClient().testdb.coll_name.insert_one(data)
+
+            print(threading.get_ident(), " child")
             used_children.put(threading.current_thread())
 
         except SystemExit:

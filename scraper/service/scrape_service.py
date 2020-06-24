@@ -4,7 +4,8 @@ from service.scraper import StackOversight
 from service.stack_overflow import StackOverflow
 from queue import Queue
 
-keys = ['RGaU7lYPN8L5KbnIfkxmGQ((', '1yfsxJa1AC*GlxN6RSemCQ((']
+keys = ['LuC6vXmC*oswbMCdsWrNuw((']
+
 
 def init_scrape(language: str):
     # returns a link to a list of SO posts
@@ -40,6 +41,6 @@ def scrape_parent_links(language: str):
 
     posts = StackOverflow.create_parent_link(sort=StackOverflow.Sorts.votes.value,
                                              order=StackOverflow.Orders.descending.value,
-                                             tag=language_tag, page_size=100)
+                                             tag=language_tag, page_size=100, key="LuC6vXmC*oswbMCdsWrNuw((")
 
     return posts

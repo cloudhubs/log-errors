@@ -14,8 +14,8 @@ import inspect
 class ThreadExecutioner:
     @staticmethod
     def mass_murder(victims: Queue):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         try:
             while True:
                 victim = victims.get(block=True)
@@ -27,9 +27,10 @@ class ThreadExecutioner:
 
     @staticmethod
     def murder(victim: threading.Thread):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         alive = victim.is_alive()
+        print(threading.get_ident(), " being murdered")
         if alive:
             if not ctypes.pythonapi.PyThreadState_SetAsyncExc(victim, ctypes.py_object(SystemExit)):
                 raise ChildProcessError
@@ -39,8 +40,8 @@ class ThreadExecutioner:
 
     @staticmethod
     def executeParent(target, tasks: Queue, site, child_link_queue: Queue, kill):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         hit_queue = Queue()
         # Thread killer is for killing the parent or child thread once they run out of links.
         thread_killer = threading.Thread(target=ThreadExecutioner.mass_murder, args=[hit_queue], daemon=True)
@@ -65,8 +66,8 @@ class ThreadExecutioner:
 
     @staticmethod
     def executeChild(target, tasks: Queue, site, code_io_handle, text_io_handle, kill, other_self):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         hit_queue = Queue()
         # Thread killer is for killing the parent or child thread once they run out of links.
         thread_killer = threading.Thread(target=ThreadExecutioner.mass_murder, args=[hit_queue], daemon=True)
