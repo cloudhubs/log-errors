@@ -29,3 +29,15 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Python ###
+venv/*
+scraper/venv/*
+
+*.pyc
+
+### General ###
+*.txt
+!requirements.txt
+
+! .gitignore
