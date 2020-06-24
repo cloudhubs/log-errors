@@ -19,6 +19,7 @@ class StackOverflow(Site):
     site = 'stackoverflow'
     api_url = 'https://api.stackexchange.com'
     api_version = '2.2'
+    key = "LuC6vXmC*oswbMCdsWrNuw(("
 
     limit = 10000
     timeout_sec = 86400
@@ -66,16 +67,18 @@ class StackOverflow(Site):
         csharp = 'c#'
 
     def __init__(self, client_keys: list):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
-        sessions = [self.init_key(key) for key in client_keys]
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
+        sessions = [self.init_key(StackOverflow.key) for key in [StackOverflow.key]]
 
         super(StackOverflow, self).__init__(sessions, self.timeout_sec, self.limit)
 
     def get_child_links(self, parent_link: str, pause=False, pause_time=None):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
+        print(parent_link)
         response = self.process_request(parent_link, pause, pause_time)
+        print(response)
         # TODO: handle None response
         key = response[1]
         request_count = response[2]
@@ -101,9 +104,9 @@ class StackOverflow(Site):
 
     # as a hook for future needs
     def handle_request(self, url: str, key: str):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
-        url = f'{url}&{self.fields["key"]}={key}'
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
+        # url = f'{url}&{self.fields["key"]}={StackOverflow.key}'
 
         # TODO: have this function return None if it has already been scraped
         # if url not in self.req_table:
@@ -113,8 +116,8 @@ class StackOverflow(Site):
 
     @staticmethod
     def create_parent_link(method=Methods.question.value, **kwargs):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         url = f'{StackOverflow.api_url}/{StackOverflow.api_version}/{method}'
 
         kwargs['site'] = StackOverflow.site
@@ -136,21 +139,25 @@ class StackOverflow(Site):
 
     @staticmethod
     def init_key(key: str):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        print(key)
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         response = requests.get(f'{StackOverflow.api_url}/{StackOverflow.api_version}/'
                                 f'{StackOverflow.Methods.info.value}{StackOverflow.fields["site"]}='
-                                f'{StackOverflow.site}&{StackOverflow.fields["key"]}={key}').json()
+                                f'{StackOverflow.site}&{StackOverflow.fields["key"]}={StackOverflow.key}')
+        print(response.text)
+        response = response.json()
 
         if response['quota_max'] != StackOverflow.limit:
+            print(response)
             raise ValueError
 
         return mutabletuple(StackOverflow.limit - response['quota_remaining'], key)
 
     @staticmethod
     def get_text(response: requests.Response):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         try:
             return [element.get_text() for element in Site.cook_soup(response).find_all(attrs={'class': 'post-text'})]
         except:
@@ -159,8 +166,8 @@ class StackOverflow(Site):
 
     @staticmethod
     def get_code(response: requests.Response):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         try:
             return [element.get_text() for element in Site.cook_soup(response).find_all('code')]
         except:
@@ -169,18 +176,18 @@ class StackOverflow(Site):
 
     @staticmethod
     def get_title(response: requests.Response):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         try:
-            return Site.cook_soup(response).find_all('title')
+            return Site.cook_soup(response).find('title').get_text()
         except:
             # no title?
-            return []
+            return ""
 
     @staticmethod
     def get_min_pause():
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         return StackOverflow.min_pause
 
     @staticmethod

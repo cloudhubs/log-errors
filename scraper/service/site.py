@@ -19,8 +19,8 @@ class Site(object):
     last_pause_time = None
 
     def __init__(self, sessions: list, timeout_sec: int, limit: int):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
 
         self.limit = limit
         self.timeout_sec = timeout_sec
@@ -31,8 +31,8 @@ class Site(object):
             self.balancer = SiteBalancer(sessions, timeout_sec, limit)
 
     def pause(self, pause_time):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
         if not pause_time and self.limit:
             # try to evenly spread the requests out by default
             pause_time = self.timeout_sec / self.limit
@@ -78,8 +78,8 @@ class Site(object):
         raise NotImplementedError
 
     def process_request(self, url: str, pause=False, pause_time=None):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
 
         # TODO: Set this up to wait on a signal from a timer thread so that it isn't a busy wait
         # get the next id to use or wait until one is ready
@@ -108,7 +108,7 @@ class Site(object):
 
     @staticmethod
     def cook_soup(response: requests.Response):
-        print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
-            threading.get_ident()))
+        # print("Function -> '{}'\t\t".format(inspect.currentframe().f_code.co_name) + " Thread -> " + str(
+        #     threading.get_ident()))
 
         return BeautifulSoup(response.text, 'html.parser')

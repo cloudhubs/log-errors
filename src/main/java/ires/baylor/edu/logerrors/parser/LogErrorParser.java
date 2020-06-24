@@ -25,7 +25,7 @@ public class LogErrorParser {
     static Pattern tracebackExitPattern = Pattern.compile(ENTRY_REGEX);
     static Pattern tracebackEntryPattern = Pattern.compile(TRACEBACK_REGEX);
     static Pattern nestedEntryPattern = Pattern.compile(NESTED_REGEX);
-
+    private static int lineNum;
 
     /**
      * Tokenizes the log file.
@@ -37,7 +37,7 @@ public class LogErrorParser {
         PeekableScanner scan = new PeekableScanner(new File(pathToLogFile));
         List<LogError> errors = new ArrayList<>();
         String nextLine;
-        int lineNum = 0;
+        lineNum = 0;
 
 
         while (scan.hasNextLine()) {
@@ -49,7 +49,6 @@ public class LogErrorParser {
                 /** line is considered the beginning of an error. **/
                 log.info("Found Entry: " + lineNum);
                 errors.add(parseLine(scan.nextLine(), lineNum, pathToLogFile));
-
                 //Check if there is a traceback. If so update the error message.
                 while (tracebackEntryPattern.matcher(scan.peekLine()).matches()) {
                     /** line is the beginning of a traceback segment.**/
@@ -117,6 +116,7 @@ public class LogErrorParser {
      */
     private static List<String> addNested(PeekableScanner errLog) {
         String line = errLog.nextLine();
+        lineNum++;
         return addTraceback(errLog);
     }
 
@@ -134,10 +134,11 @@ public class LogErrorParser {
         // Get all trace entries
         while (errLog.hasNextLine() && !(tracebackExitPattern.matcher(errLog.peekLine()).matches() || nestedEntryPattern.matcher(errLog.peekLine()).matches())) {
             line = errLog.nextLine();
-
+            lineNum++;
             //the traceback has not finished. continue to read and append
             if (errLog.hasNextLine()) {
                 concatenator.append(line).append("\n").append(errLog.nextLine());
+                lineNum++;
                 line = concatenator.toString();
                 concatenator.setLength(0);
             }
