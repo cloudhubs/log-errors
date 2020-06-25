@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -85,19 +86,12 @@ public class StackOverflowScraperMatcher {
         List<ScraperObject> obj = convertDocument(documents);
         List<ScraperObject> textMatch = TextMatching(obj, parameters.getCurrentError());
         textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
-
         return removeDups(textMatch);
     }
 
     private static List<ScraperObject> removeDups(List<ScraperObject> textMatch) {
-        for(int i = 0;i < textMatch.size(); i++){
-            for(int j = i; j < textMatch.size(); j++){
-                if(textMatch.get(i).equals(textMatch.get(j))){
-                    textMatch.remove(textMatch.get(j));
-                }
-            }
-        }
-        return textMatch;
+        List<ScraperObject> listWithoutDuplicates = new ArrayList<>(new HashSet<>(textMatch));
+        return listWithoutDuplicates;
     }
 
     private static List<ScraperObject> convertDocument(List<Document> documents) {
