@@ -1,7 +1,8 @@
 package ires.baylor.edu.logerrors.controller;
 
+import ires.baylor.edu.logerrors.matcher.ScraperObject;
 import ires.baylor.edu.logerrors.matcher.StackOverflowScraperMatcher;
-import ires.baylor.edu.logerrors.matcher.TempControllerParametersNoDB;
+import ires.baylor.edu.logerrors.matcher.MatcherControllerParameters;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.io.FileNotFoundException;
 @RestController
 public class LogMatcherController {
     @PostMapping("/matcher")
-    public ResponseEntity<?> resolveErrors(@RequestBody TempControllerParametersNoDB request)  {
+    public ResponseEntity<?> resolveErrors(@RequestBody MatcherControllerParameters request)  {
         log.info("Request: " + request);
         try {
             return new ResponseEntity<>(StackOverflowScraperMatcher.matchLog(request), HttpStatus.ACCEPTED);
