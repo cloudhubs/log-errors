@@ -59,4 +59,4 @@ def delete_all_errors():
     return dumps("OK")
 
 if __name__ == "__main__":
-    db_controller.run(debug=True, port="5001")
+    db_controller.run(debug=True, port="5000")
