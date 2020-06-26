@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -88,22 +89,12 @@ public class StackOverflowScraperMatcher {
         List<ScraperObject> textMatch = TextMatching(obj, parameters.getCurrentError());
         textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
 
-        if(textMatch.isEmpty()){
-            GoogleSearch.search(parameters.getCurrentError().getErrorMessage());
-        }
-
         return removeDups(textMatch);
     }
 
     private static List<ScraperObject> removeDups(List<ScraperObject> textMatch) {
-        for(int i = 0;i < textMatch.size(); i++){
-            for(int j = i; j < textMatch.size(); j++){
-                if(textMatch.get(i).equals(textMatch.get(j))){
-                    textMatch.remove(textMatch.get(j));
-                }
-            }
-        }
-        return textMatch;
+        List<ScraperObject> listWithoutDuplicates = new ArrayList<>(new HashSet<>(textMatch));
+        return listWithoutDuplicates;
     }
 
     private static List<ScraperObject> convertDocument(List<Document> documents) {
