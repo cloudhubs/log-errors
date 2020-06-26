@@ -22,7 +22,7 @@ def home():
     return "<p>Hello to the database api</p>"
 
 
-@db_controller.route("/mongo/test/add", methods=['POST'])
+@db_controller.route("/mongo/test", methods=['POST'])
 @cross_origin()
 def test_add():
     con = getSession()
@@ -40,7 +40,7 @@ def test_add():
     return "200"
 
 
-@db_controller.route('/mongo/test/find', methods=['GET'])
+@db_controller.route('/mongo/test', methods=['GET'])
 @cross_origin()
 def get_all_errors():
     con = getSession()
@@ -49,7 +49,7 @@ def get_all_errors():
     return dumps(data)
 
 
-@db_controller.route('/mongo/test/empty', methods=['POST'])
+@db_controller.route('/mongo/test', methods=['DELETE'])
 @cross_origin()
 def delete_all_errors():
     con = getSession()

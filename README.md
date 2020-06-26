@@ -15,45 +15,25 @@
 [Install Lombok for your IDE](https://www.baeldung.com/lombok-ide)
 
 
-# LogScraper API
-- [Scrape File](src/main/java/ires/baylor/edu/logerrors/controller/README.md): `POST /errors/`
+# Log Parser API
+- [Parse File](src/main/java/ires/baylor/edu/logerrors/controller/README.md): `POST /errors/`
 
 
 # StackOverflow Scraper API
-- [Scrape File](/scraper/api/README.md) 
+- [Start Scraper](/scraper/api/README.md)  `POST /scrape/{language}`
+- [Scrape Meta-data](/scraper/api/README.md) `POST /scrape-meta/{language}`
+- [Stop Scraper](/scraper/api/README.md) `POST /scrape/stop`
 
+# MongoDB API
+- [Home](/scraper/api/README.md) `GET /mongo`
+- [Find All](/scraper/api/README.md) `GET /mongo/test`
+- [Add](/scraper/api/README.md) `POST /mongo/test`
+- [Empty](/scraper/api/README.md) `DELETE /mongo/test`
 
-# Mongo DB API
-## Endpoint: `/mongo`
-### Welcome Page
-
-## Endpoint: `/mongo/test/add`
-### Action: Adds json (from body) to collection `testdb.coll_name`
-
-## Endpoint: `/mongo/test/find`
-### Returns: all documents in `testdb.coll_name`
-
-## Endpoint: `/mongo/test/empty`
-### empties `testdb.coll_name`
 
 # Mongo Matcher
-# API
-## Endpoint: `/match`
+-[Find Matches](src/main/java/ires/baylor/edu/logerrors/controller/README.md) `GET /matcher`
 ## Body:
-```json
-{
-    "pathToScraper": "not implemented",
-    "currentError": {
-        "errorMessage": "AttributeError: 'asdf' object has no attribute 'test'",
-        "isExternal": false,
-        "lineNumber": 123,
-        "source": "not implementd",
-        "stackOverflow": null,
-        "nestedError": null
-    },
-    "variance": 0.85
-}
-```
 
 
 

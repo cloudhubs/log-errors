@@ -50,3 +50,66 @@ Used to create POJO from raw log files found [here](https://github.com/cloudhubs
 
 **Condition**: If file is not found
 **Code**: `500 Server Error`
+
+# Matcher API
+**URL** : `/matcher`
+
+**Method** : `GET`
+
+**Data Constraints** : 
+
+```json
+{
+    "pathToScraper": "not implemented",
+    "currentError": {
+        "errorMessage": "AttributeError: 'asdf' object has no attribute 'test'",
+        "isExternal": false,
+        "lineNumber": 123,
+        "source": "not implementd",
+        "stackOverflow": null,
+        "nestedError": null
+    },
+    "variance": 0.85
+}
+```
+
+## Success Response
+**Code**: `200 OK`
+
+**Content Example**
+```json
+{
+  "data": [
+    {
+      "url": "https://stackoverflow.com/questions/62586014/cant-save-as-a-csv-file",
+      "title": "Cant't save CSV file",
+      "code": "Traceback (most recent call last):File c:/Users/Louis Charron/Documents/GitHub/hemnet-scraper/hemnet_scra.p,line 196, in <module>SlutPriserScraper(start_page=1,num_of_pages=50,use_google_maps_api=False).to_csv()File c:/Users/Louis Charron/Documents/GitHub/hemnet-scraper/hemnet_scraper.py, line 189, in to_csv with open(csv_filepath, 'w') as output_file:FileNotFoundError: [Errno 2] No such file or directory: 'csv/20200625-housingprices.csv' ",
+      "text": "Any clues on where to start debugging this? It might sound strange but I wonder if its even a code issue (considering I had it working just less than 1 hour ago)",
+      "tags": [
+        "python",
+        "csv",
+        "web-scraping"
+      ]
+    }
+  ]
+}
+```
+
+## Error Response
+
+**Condition**: If file is not found
+**Code**: `500 Serv
+```json
+{
+    "pathToScraper": "not implemented",
+    "currentError": {
+        "errorMessage": "AttributeError: 'asdf' object has no attribute 'test'",
+        "isExternal": false,
+        "lineNumber": 123,
+        "source": "not implementd",
+        "stackOverflow": null,
+        "nestedError": null
+    },
+    "variance": 0.85
+}
+```

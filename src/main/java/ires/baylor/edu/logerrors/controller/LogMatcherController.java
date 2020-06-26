@@ -15,7 +15,7 @@ import java.io.FileNotFoundException;
 @Slf4j
 @RestController
 public class LogMatcherController {
-    @PostMapping("/matcher")
+    @GetMapping("/matcher")
     public ResponseEntity<?> resolveErrors(@RequestBody TempControllerParametersNoDB request)  {
         log.info("Request: " + request);
         try {
