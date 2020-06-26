@@ -16,15 +16,19 @@
 
 
 # Log Parser API
+**Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
 - [Parse File](src/main/java/ires/baylor/edu/logerrors/controller/README.md): `POST /errors/`
 
 
+
 # StackOverflow Scraper API
+**The mongo and scraper apis are run simultaneusly. Start them from [this file](/scraper/api/main.py)**
 - [Start Scraper](/scraper/api/README.md)  `POST /scrape/{language}`
 - [Scrape Meta-data](/scraper/api/README.md) `POST /scrape-meta/{language}`
 - [Stop Scraper](/scraper/api/README.md) `POST /scrape/stop`
 
 # MongoDB API
+**The mongo and scraper apis are run simultaneusly. Start them from [this file](/scraper/api/main.py)**
 - [Home](/scraper/api/README.md) `GET /mongo`
 - [Find All](/scraper/api/README.md) `GET /mongo/test`
 - [Add](/scraper/api/README.md) `POST /mongo/test`
@@ -32,8 +36,9 @@
 
 
 # Mongo Matcher
+**Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
+
 -[Find Matches](src/main/java/ires/baylor/edu/logerrors/controller/README.md) `GET /matcher`
-## Body:
 
 
 
