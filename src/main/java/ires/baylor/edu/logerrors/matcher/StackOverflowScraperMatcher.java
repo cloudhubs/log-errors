@@ -29,7 +29,7 @@ public class StackOverflowScraperMatcher {
      * Matches the LogError to the StackOverflowQuestion array taken from the Database (Future implementation)
      *
      * @param SOFromDB   List of StackOverflowQuestions taken from Mark's Stack Overflow scraper
-     * @param logToMatch LogError we wish to find Stack Overflow matches to
+     * @param logErrorMsg LogError we wish to find Stack Overflow matches to
      * @return a list of StackOverflowQuestions that match the LogError given
      */
     public static List<ScraperObject> fuzzyMatching(List<ScraperObject> SOFromDB, String logErrorMsg) {
@@ -82,14 +82,32 @@ public class StackOverflowScraperMatcher {
      * @throws FileNotFoundException if the file cannot be opened
      */
     public static List<ScraperObject> matchLog(TempControllerParametersNoDB parameters) throws IOException, GeneralSecurityException {
-        mongoConnector db = new mongoConnector();
-        List<Document> documents = db.getAllFrom(db.getCollection("coll_name")); //.forEach((System.out::println));
+        int found = 0;
+        while (found < 2) {
+            mongoConnector db = new mongoConnector();
+            List<Document> documents = db.getAllFrom(db.getCollection("coll_name"));
 
-        List<ScraperObject> obj = convertDocument(documents);
-        List<ScraperObject> textMatch = TextMatching(obj, parameters.getCurrentError());
-        textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
+            List<ScraperObject> obj = convertDocument(documents);
+            List<ScraperObject> textMatch = TextMatching(obj, parameters.getCurrentError());
+            textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
 
-        return removeDups(textMatch);
+            List<ScraperObject> bestList = removeDups(textMatch);
+
+            if (bestList.isEmpty() && found < 1) {
+                GoogleSearch.search(parameters.getCurrentError().getErrorMessage()).forEach((url -> {
+                    try {
+                        ScraperConnector.scrapeAndAdd(url.get(1));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }));
+                found++;
+            } else {
+                found = 2;
+                return bestList;
+            }
+        }
+        return new ArrayList<ScraperObject>();
     }
 
     private static List<ScraperObject> removeDups(List<ScraperObject> textMatch) {
