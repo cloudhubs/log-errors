@@ -8,7 +8,9 @@ import org.bson.Document;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -79,13 +81,14 @@ public class StackOverflowScraperMatcher {
      * @return a list of StackOverflowQuestions that match the LogError given
      * @throws FileNotFoundException if the file cannot be opened
      */
-    public static List<ScraperObject> matchLog(TempControllerParametersNoDB parameters) throws FileNotFoundException {
+    public static List<ScraperObject> matchLog(TempControllerParametersNoDB parameters) throws IOException, GeneralSecurityException {
         mongoConnector db = new mongoConnector();
         List<Document> documents = db.getAllFrom(db.getCollection("coll_name")); //.forEach((System.out::println));
 
         List<ScraperObject> obj = convertDocument(documents);
         List<ScraperObject> textMatch = TextMatching(obj, parameters.getCurrentError());
         textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
+
         return removeDups(textMatch);
     }
 
