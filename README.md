@@ -9,11 +9,27 @@
 
 4. Mongo DB API - an API for the mongo db containing information from StackOverflow Scraper 
 
-## Installation Of LogScraper
+## Installation Of Project
+### Java
 `git clone https://github.com/cloudhubs/log-errors.git`
 
 [Install Lombok for your IDE](https://www.baeldung.com/lombok-ide)
+### Python
+This will use pycharm as the IDE of choice. (Assuming you have already cloned the repo)
+1. Open `log-errors/scraper` in [Pycharm](https://www.jetbrains.com/pycharm/download/#section=windows)
+2. Indicate the python interpreter if prompted at the top. 
+3. Open a new terminal at the bottom of the window. 
+4. If the line does not start with the name of your virtual environment, follow [this](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html)
 
+    for example: note the (venv) indicating the virtual environment, the path and the brach (master)
+    ``` bash
+    (venv) mark@MarksComputer ~/Documents/scraper/log-errors (master) $ 
+    ```
+5. Run the following command in the project root
+    ``` bash 
+    pip install -r requirements.txt 
+    ```
+6. To run the project right click in `api/main.py` and select `run`
 
 # Log Parser API
 **Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
@@ -23,22 +39,22 @@
 
 # StackOverflow Scraper API
 **The mongo and scraper apis are run simultaneusly. Start them from [this file](/scraper/api/main.py)**
-- [Start Scraper](/scraper/api/README.md)  `POST /scrape/{language}`
-- [Scrape Meta-data](/scraper/api/README.md) `POST /scrape-meta/{language}`
-- [Stop Scraper](/scraper/api/README.md) `POST /scrape/stop`
+- [Start Scraper](README-scraper.md)  `POST /scrape/{language}`
+- [Scrape Meta-data](README-scraper.md) `POST /scrape-meta/{language}`
+- [Stop Scraper](README-scraper.md) `POST /scrape/stop`
 
 # MongoDB API
 **The mongo and scraper apis are run simultaneusly. Start them from [this file](/scraper/api/main.py)**
-- [Home](/scraper/api/README.md) `GET /mongo`
-- [Find All](/scraper/api/README.md) `GET /mongo/test`
-- [Add](/scraper/api/README.md) `POST /mongo/test`
-- [Empty](/scraper/api/README.md) `DELETE /mongo/test`
+- [Home](README-scraper.md) `GET /mongo`
+- [Find All](README-scraper.md) `GET /mongo/test`
+- [Add](README-scraper.md) `POST /mongo/test`
+- [Empty](README-scraper.md) `DELETE /mongo/test`
 
 
 # Mongo Matcher
 **Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
 
--[Find Matches](src/main/java/ires/baylor/edu/logerrors/controller/README.md) `GET /matcher`
+-[Find Matches](README-matcher.md) `GET /matcher`
 
 
 
