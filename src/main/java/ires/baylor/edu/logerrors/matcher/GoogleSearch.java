@@ -16,7 +16,7 @@ public class GoogleSearch {
     public static ArrayList<ArrayList<String>> search(String error) throws GeneralSecurityException, IOException {
 //    public static void main(String[] args) throws GeneralSecurityException, IOException {
 
-        String searchQuery = "test"; //The query to search
+        String searchQuery = error; //The query to search
         String cx = System.getenv().get("cx"); //Your search engine
 
         //Instance Customsearch
@@ -39,7 +39,6 @@ public class GoogleSearch {
                 result.add(ri.getLink());
                 results.add(result);
             }
-//            results.forEach(resultList -> resultList.forEach(System.out::println));
             return results;
         }
         return new ArrayList<>();
