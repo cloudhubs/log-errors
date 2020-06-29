@@ -25,7 +25,7 @@ This will use pycharm as the IDE of choice. (Assuming you have already cloned th
     ``` bash
     (venv) mark@MarksComputer ~/Documents/scraper/log-errors (master) $ 
     ```
-5. Run the following command in the project root
+5. Run the following command in `scraper/` root
     ``` bash 
     pip install -r requirements.txt 
     ```
