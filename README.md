@@ -33,7 +33,7 @@ This will use pycharm as the IDE of choice. (Assuming you have already cloned th
 
 # Log Parser API
 **Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
-- [Parse File](src/main/java/ires/baylor/edu/logerrors/controller/README.md): `POST /errors/`
+- [Parse File](README-matcher.md): `POST /errors/`
 
 
 
