@@ -1,38 +1,44 @@
-# log-errors
+# Welcome to Log-Errors
 
-## Installation
+## This Repository contains a multitude of sub projects. 
+1. Log Scraper - tokenizes log files of the format in [here](https://github.com/cloudhubs/logscraper/tree/master/logs/from_prod_anonymized) 
+
+2. StackOverflow Scraper - an api that generates a database of posts from stack overflow
+
+3. Mongo Matcher - a matching algorithm for comparing errors to data scraped by the StackOverflow Scraper
+
+4. Mongo DB API - an API for the mongo db containing information from StackOverflow Scraper 
+
+## Installation Of LogScraper
 `git clone https://github.com/cloudhubs/log-errors.git`
 
 [Install Lombok for your IDE](https://www.baeldung.com/lombok-ide)
 
-## Request
-```
-curl --location --request POST 'localhost:8080/<route>' --header 'Content-Type: application/json' --data-raw "{\"pathToLogFile\": \"$1\", \"pathToLogDirectory\": \"$2\"}
-```
 
-## API
->`/errors/`
+# Log Parser API
+**Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
+- [Parse File](src/main/java/ires/baylor/edu/logerrors/controller/README.md): `POST /errors/`
 
-Returns JSON formatted parsed error log.
 
-#### Example
-```
-{
-        "errorMessage" : "AttributeError: 'NoneType' object has no attribute 'split'\n",
-                "gitHub" : null,
-                "isExternal" : false,
-                "lineNumber" : 2666,
-                "nestedError" : null,
-                "source" : "../logscraper/logs/from_prod_anonymized/ccx_data_pipeline_1_anonymized.log",
-                "stackOverflow" : null,
-                "traceBacks" : [
-                        "File \"/opt/app-root/lib/python3.6/site-packages/insights/core/dr.py\", line 962, in run\nresult = DELEGATES[component].process(broker)",
-                        "File \"/opt/app-root/lib/python3.6/site-packages/insights/core/dr.py\", line 681, in process\nreturn self.invoke(broker)",
-                        "File \"/opt/app-root/lib/python3.6/site-packages/insights/core/plugins.py\", line 64, in invoke\nreturn super(PluginType, self).invoke(broker)",
-                        "File \"/opt/app-root/lib/python3.6/site-packages/insights/core/dr.py\", line 661, in invoke\nreturn self.component(*args)",
-                        "File \"/opt/app-root/lib/python3.6/site-packages/ccx_ocp_core/models/nodes.py\", line 108, in Nodes\nint(node.q.status.capacity.memory.value.split(\"Ki\")[0]) / (1000 * 1000), 2",
-                        "AttributeError: 'NoneType' object has no attribute 'split'\n"
-                ]
-}
-```
+
+# StackOverflow Scraper API
+**The mongo and scraper apis are run simultaneusly. Start them from [this file](/scraper/api/main.py)**
+- [Start Scraper](/scraper/api/README.md)  `POST /scrape/{language}`
+- [Scrape Meta-data](/scraper/api/README.md) `POST /scrape-meta/{language}`
+- [Stop Scraper](/scraper/api/README.md) `POST /scrape/stop`
+
+# MongoDB API
+**The mongo and scraper apis are run simultaneusly. Start them from [this file](/scraper/api/main.py)**
+- [Home](/scraper/api/README.md) `GET /mongo`
+- [Find All](/scraper/api/README.md) `GET /mongo/test`
+- [Add](/scraper/api/README.md) `POST /mongo/test`
+- [Empty](/scraper/api/README.md) `DELETE /mongo/test`
+
+
+# Mongo Matcher
+**Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
+
+-[Find Matches](src/main/java/ires/baylor/edu/logerrors/controller/README.md) `GET /matcher`
+
+
 

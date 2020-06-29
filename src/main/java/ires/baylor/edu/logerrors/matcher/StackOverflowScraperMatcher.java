@@ -6,7 +6,15 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.bson.Document;
 
 import java.io.FileNotFoundException;
+<<<<<<< HEAD
+=======
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.security.GeneralSecurityException;
+>>>>>>> master
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -26,7 +34,7 @@ public class StackOverflowScraperMatcher {
      * Matches the LogError to the StackOverflowQuestion array taken from the Database (Future implementation)
      *
      * @param SOFromDB   List of StackOverflowQuestions taken from Mark's Stack Overflow scraper
-     * @param logToMatch LogError we wish to find Stack Overflow matches to
+     * @param logErrorMsg LogError we wish to find Stack Overflow matches to
      * @return a list of StackOverflowQuestions that match the LogError given
      */
     public static List<ScraperObject> fuzzyMatching(List<ScraperObject> SOFromDB, String logErrorMsg) {
@@ -149,26 +157,39 @@ public class StackOverflowScraperMatcher {
      * @return a list of StackOverflowQuestions that match the LogError given
      * @throws FileNotFoundException if the file cannot be opened
      */
-    public static List<ScraperObject> matchLog(MatcherControllerParameters parameters) throws FileNotFoundException {
-        mongoConnector db = new mongoConnector();
-        List<Document> documents = db.getAllFrom(db.getCollection("coll_name")); //.forEach((System.out::println));
 
-        List<ScraperObject> obj = convertDocument(documents);
-        //List<ScraperObject> textMatch = TextMatching(obj, parameters.getCurrentError());
-        //textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
-        List<ScraperObject> textMatch = advancedMatching(obj, parameters.getCurrentError());
-        return removeDups(textMatch);
+    public static List<ScraperObject> matchLog(MatcherControllerParameters parameters) throws IOException, GeneralSecurityException {
+        int found = 0;
+        while (found < 2) {
+            mongoConnector db = new mongoConnector();
+            List<Document> documents = db.getAllFrom(db.getCollection("coll_name"));
+
+            List<ScraperObject> obj = convertDocument(documents);
+            List<ScraperObject> textMatch = TextMatching(obj, parameters.getCurrentError());
+            textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
+
+            List<ScraperObject> bestList = removeDups(textMatch);
+
+            if (bestList.isEmpty() && found < 1) {
+                GoogleSearch.search(parameters.getCurrentError().getErrorMessage()).forEach((url -> {
+                    try {
+                        ScraperConnector.scrapeAndAdd(url.get(1));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }));
+                found++;
+            } else {
+                found = 2;
+                return bestList;
+            }
+        }
+        return new ArrayList<ScraperObject>();
     }
 
     private static List<ScraperObject> removeDups(List<ScraperObject> textMatch) {
-        for(int i = 0; i < textMatch.size(); i++){
-            for(int j = i; j < textMatch.size(); j++){
-                if(textMatch.get(i).equals(textMatch.get(j))){
-                    textMatch.remove(textMatch.get(j));
-                }
-            }
-        }
-        return textMatch;
+        List<ScraperObject> listWithoutDuplicates = new ArrayList<>(new HashSet<>(textMatch));
+        return listWithoutDuplicates;
     }
 
     private static List<ScraperObject> convertDocument(List<Document> documents) {

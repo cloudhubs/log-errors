@@ -1,4 +1,7 @@
+from typing import Dict, Union, Any
 import threading
+
+import requests
 
 from service.scraper import StackOversight
 from service.stack_overflow import StackOverflow
@@ -44,3 +47,12 @@ def scrape_parent_links(language: str):
                                              tag=language_tag, page_size=100, key="LuC6vXmC*oswbMCdsWrNuw((")
 
     return posts
+
+
+def scrape_link(url: str) -> Dict[str, Union[str, Any]]:
+    response = requests.get(url)
+    data = {'url': url, 'title': StackOverflow.get_title(response), 'code': StackOverflow.get_code(response),
+            'text': StackOverflow.get_text(response),
+            'tags': StackOverflow.get_tags(response)}
+
+    return data

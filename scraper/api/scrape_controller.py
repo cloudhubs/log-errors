@@ -36,7 +36,7 @@ def scrape_language(language: str):
 
 
 # TODO: implement tags in the query string
-@scrape_controller.route("/scrape-meta/<language>", methods=['POST'])
+@scrape_controller.route("/scrape-meta/<language>", methods=['GET'])
 @cross_origin()
 def scrape_parent_language(language: str):
     # only support for 3 languages
@@ -48,7 +48,7 @@ def scrape_parent_language(language: str):
     # return request.json
 
 
-@scrape_controller.route("/please_stop", methods=['POST'])
+@scrape_controller.route("/scrape/stop", methods=['POST'])
 @cross_origin()
 def stop_scrape():
     # STOP
