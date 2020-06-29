@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class StackOverflowScraperMatcher {
     private static final int PERCENT_MATCH = 85;
     final static String VAR_REGEX = "(\'.*\'|\".*\")";
-    final static String VAR_REPLACEMENT = "VariableValue";
+    final static String VAR_REPLACEMENT = "VAR_VAL";
     static Pattern VARIABLE_DETECTION = Pattern.compile(VAR_REGEX);
     /**
      * Matches the LogError to the StackOverflowQuestion array taken from the Database (Future implementation)
@@ -116,7 +116,6 @@ public class StackOverflowScraperMatcher {
                             returnList.add(soq);
                             break;
                         }
-
                         code = replaceVars(code);
                         if(code.contains(logErrorMsgAdvanced)) {
                             returnListAdvanced.add(soq);
@@ -136,6 +135,9 @@ public class StackOverflowScraperMatcher {
 
 
     private static String replaceVars(String str) {
+        if (str.matches("^(\'.*\'|\".*\")$")) {
+            str = str.substring(1, str.length()-2);
+        }
         return str.replaceAll(VARIABLE_DETECTION.pattern(), VAR_REPLACEMENT).toUpperCase();
     }
 
@@ -155,10 +157,6 @@ public class StackOverflowScraperMatcher {
         //List<ScraperObject> textMatch = TextMatching(obj, parameters.getCurrentError());
         //textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
         List<ScraperObject> textMatch = advancedMatching(obj, parameters.getCurrentError());
-        for(ScraperObject scrape: textMatch) {
-            System.out.println(scrape.getTitle());
-        }
-        System.out.println(textMatch.size());
         return removeDups(textMatch);
     }
 
