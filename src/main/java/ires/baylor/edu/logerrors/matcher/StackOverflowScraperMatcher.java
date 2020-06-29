@@ -6,13 +6,8 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.bson.Document;
 
 import java.io.FileNotFoundException;
-<<<<<<< HEAD
-=======
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.security.GeneralSecurityException;
->>>>>>> master
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
