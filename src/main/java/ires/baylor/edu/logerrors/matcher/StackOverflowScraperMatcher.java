@@ -1,10 +1,8 @@
 package ires.baylor.edu.logerrors.matcher;
 
-import ires.baylor.edu.logerrors.matcher.strategyPattern.AdvancedTextMatching;
+import ires.baylor.edu.logerrors.matcher.strategyPattern.FuzzyTextMatching;
 import ires.baylor.edu.logerrors.matcher.strategyPattern.MatcherAlgorithm;
-import ires.baylor.edu.logerrors.model.LogError;
 import lombok.extern.slf4j.Slf4j;
-import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.bson.Document;
 
 import java.io.FileNotFoundException;
@@ -13,7 +11,6 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 /**
@@ -23,7 +20,7 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class StackOverflowScraperMatcher {
-    private static MatcherAlgorithm matcher = new AdvancedTextMatching();
+    private static MatcherAlgorithm matcher = new FuzzyTextMatching();
     /**
      * Receives the path to a scraper file (Changed when database is created) and the current error
      * Calls the FuzzyMatching method to find the similar results
