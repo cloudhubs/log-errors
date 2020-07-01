@@ -1,7 +1,7 @@
 package ires.baylor.edu.logerrors.matcher;
 
-import ires.baylor.edu.logerrors.matcher.strategyPattern.FuzzyTextMatching;
 import ires.baylor.edu.logerrors.matcher.strategyPattern.MatcherAlgorithm;
+import ires.baylor.edu.logerrors.matcher.strategyPattern.ScoreTextMatching;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 
@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 public class StackOverflowScraperMatcher {
-    private static MatcherAlgorithm matcher = new FuzzyTextMatching();
+    private static MatcherAlgorithm matcher = new ScoreTextMatching();
     /**
      * Receives the path to a scraper file (Changed when database is created) and the current error
      * Calls the FuzzyMatching method to find the similar results
