@@ -59,8 +59,6 @@ public class ScoreTextMatching implements MatcherAlgorithm {
                 highscore = score;
             }
             if(score > 0) {
-                System.out.println(score + " : "+ soq.getTitle());
-
                 //If the score bracket does not exist then create a new bracket for it
                 if (!ScraperObjectScores.containsKey(score)) {
                     ScraperObjectScores.put(score, new ArrayList<>());
@@ -85,8 +83,7 @@ public class ScoreTextMatching implements MatcherAlgorithm {
             }
             highscore -= 10;
         }
-        System.out.println();
-        returnList.forEach(t-> System.out.println(t.getTitle()));
+
         return returnList;
     }
 

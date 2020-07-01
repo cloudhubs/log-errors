@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 
@@ -59,7 +60,7 @@ public class StackOverflowScraperMatcher {
     }
 
     private static List<ScraperObject> removeDups(List<ScraperObject> textMatch) {
-        List<ScraperObject> listWithoutDuplicates = new ArrayList<>(new HashSet<>(textMatch));
+        List<ScraperObject> listWithoutDuplicates = new ArrayList<>(new LinkedHashSet<>(textMatch));
         return listWithoutDuplicates;
     }
 
