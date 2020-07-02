@@ -34,11 +34,11 @@ public class LogErrorParser {
      * @return A list containing {@link LogError} objects. Which represent the heirarchy of the errors.
      */
     public static List<LogError> parseLog(String pathToLogFile) throws FileNotFoundException {
+
         PeekableScanner scan = new PeekableScanner(new File(pathToLogFile));
         List<LogError> errors = new ArrayList<>();
         String nextLine;
         lineNum = 0;
-
 
         while (scan.hasNextLine()) {
             lineNum++;

@@ -13,6 +13,11 @@ public class LogError {
     String source; // path to log file
     int lineNumber; // starting line number within the log file
 
+    String sourceCodeLine;
+    List<String> projectClassNames;
+    List<String> externalPackages; //From requirements.txt file
+    List<Integer> errorCharWeight;
+
     Boolean isExternal;
     String errorMessage;
     List<String> traceBacks;
