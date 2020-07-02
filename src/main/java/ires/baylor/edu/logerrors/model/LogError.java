@@ -14,7 +14,8 @@ public class LogError {
     int lineNumber; // starting line number within the log file
 
     String sourceCodeLine;
-    List<String> projectClassNames;
+    ClassStructure classStructure; //List of classes and their respective functions and imports
+
     List<String> externalPackages; //From requirements.txt file
     List<Integer> errorCharWeight;
 

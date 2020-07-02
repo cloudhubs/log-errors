@@ -1,5 +1,6 @@
 package ires.baylor.edu.logerrors.parser;
 
+import ires.baylor.edu.logerrors.model.ClassStructure;
 import ires.baylor.edu.logerrors.model.LogError;
 import ires.baylor.edu.logerrors.util.PeekableScanner;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class LogErrorParser {
     static Pattern tracebackEntryPattern = Pattern.compile(TRACEBACK_REGEX);
     static Pattern nestedEntryPattern = Pattern.compile(NESTED_REGEX);
     private static int lineNum;
-
+    static ClassStructure commonClassStructure;
     /**
      * Tokenizes the log file.
      *
@@ -34,6 +35,9 @@ public class LogErrorParser {
      * @return A list containing {@link LogError} objects. Which represent the heirarchy of the errors.
      */
     public static List<LogError> parseLog(String pathToLogFile) throws FileNotFoundException {
+
+        commonClassStructure = ProjectStructureParser.getClassStructure(
+                "C:\\Users\\Elizabeth\\Documents\\Elizabeth\\Baylor_Summer_2020\\Team_C_GIT\\log-errors\\scraper");
 
         PeekableScanner scan = new PeekableScanner(new File(pathToLogFile));
         List<LogError> errors = new ArrayList<>();
@@ -91,6 +95,7 @@ public class LogErrorParser {
     private static LogError parseLine(String currentLine, int lineNum, String pathToLogFile) {
         LogError currentError = new LogError();
         //Create new LogError
+        currentError.setClassStructure(commonClassStructure);
         currentError.setLineNumber(lineNum);
         currentError.setSource(pathToLogFile);
 
