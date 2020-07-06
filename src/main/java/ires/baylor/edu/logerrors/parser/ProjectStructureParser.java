@@ -3,6 +3,9 @@ import ires.baylor.edu.logerrors.model.ClassStructure;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Scanner;
 
 public class ProjectStructureParser {
@@ -10,14 +13,16 @@ public class ProjectStructureParser {
 
     public static ClassStructure getClassStructure(String current) {
         cs = new ClassStructure();
-        File folder = new File(current);
 
-        try {
-            recursiveFunc(folder);
-        } catch (FileNotFoundException e) {
-            System.out.println("AAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+        if(current != null) {
+            File folder = new File(current);
+            try {
+                recursiveFunc(folder);
+                cs.removeDuplicates();
+            } catch (FileNotFoundException e) {
+                System.out.println("AAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+            }
         }
-
         return cs;
     }
 
@@ -46,8 +51,20 @@ public class ProjectStructureParser {
                             currentLine = currentLine.replaceFirst(": *", "").replaceFirst(" *def ", "");
                             cs.addFuncName(currentLine);
 
+                        } else if (currentLine.matches(".*=.*") && !currentLine.matches(".*#.*|.*(\\+|-|!|=|>|<)=.*")) {
+                            if (currentLine.matches(".*self\\..*")){
+                                cs.addVarNames(currentLine.replaceAll(" *=.*", "").replaceAll(".*self\\.", "").replaceFirst(" *", ""));
+                            } else if (!currentLine.replaceAll("=.*", "").matches(".*\\..*") && !currentLine.matches("[^=]*\\(.*=.*\\).*")) {
+                                cs.addVarNames(currentLine.replaceAll(" *=.*", "").replaceFirst(" *", "").replaceAll("\\[.*\\]", ""));
+                            }
                         }
 
+                    }
+                    scan.close();
+                } else if (f.getName().equalsIgnoreCase("requirements.txt")) {
+                    Scanner scan = new Scanner(f);
+                    while (scan.hasNextLine()) {
+                        cs.addExternalPackages(scan.nextLine());
                     }
                     scan.close();
                 }

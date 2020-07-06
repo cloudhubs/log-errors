@@ -16,7 +16,7 @@ public class LogError {
     String sourceCodeLine;
     ClassStructure classStructure; //List of classes and their respective functions and imports
 
-    List<String> externalPackages; //From requirements.txt file
+
     List<Integer> errorCharWeight;
 
     Boolean isExternal;
