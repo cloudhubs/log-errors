@@ -1,5 +1,6 @@
 package ires.baylor.edu.logerrors.parser;
 import ires.baylor.edu.logerrors.model.ClassStructure;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Scanner;
 
+@Slf4j
 public class ProjectStructureParser {
     private static ClassStructure cs = null;
 
@@ -20,7 +22,7 @@ public class ProjectStructureParser {
                 recursiveFunc(folder);
                 cs.removeDuplicates();
             } catch (FileNotFoundException e) {
-                System.out.println("AAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+                log.info("Unable to parce file structure given");
             }
         }
         return cs;
@@ -32,7 +34,6 @@ public class ProjectStructureParser {
         for (File f : listOfFiles) {
             if (f.isFile()) {
                 if (f.getName().endsWith(".py") && !f.getName().contains("__init__")) {
-
                     Scanner scan = new Scanner(f);
                     String currentLine = null;
                     while (scan.hasNextLine()) {

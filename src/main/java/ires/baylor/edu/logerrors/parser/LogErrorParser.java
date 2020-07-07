@@ -2,6 +2,7 @@ package ires.baylor.edu.logerrors.parser;
 
 import ires.baylor.edu.logerrors.model.ClassStructure;
 import ires.baylor.edu.logerrors.model.LogError;
+import ires.baylor.edu.logerrors.model.ResolveErrorsRequest;
 import ires.baylor.edu.logerrors.util.PeekableScanner;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,15 +32,17 @@ public class LogErrorParser {
     /**
      * Tokenizes the log file.
      *
-     * @param pathToLogFile Is the local path to the log file
+     * @param inputObject Is the local path to the log file
      * @return A list containing {@link LogError} objects. Which represent the heirarchy of the errors.
      */
-    public static List<LogError> parseLog(String pathToLogFile) throws FileNotFoundException {
+    public static List<LogError> parseLog(ResolveErrorsRequest inputObject) throws FileNotFoundException {
 
-        commonClassStructure = ProjectStructureParser.getClassStructure(
-                "C:\\Users\\Elizabeth\\Documents\\Elizabeth\\Baylor_Summer_2020\\Team_C_GIT\\log-errors\\scraper");
+        //commonClassStructure = ProjectStructureParser.getClassStructure(
+        //        "C:\\Users\\Elizabeth\\Documents\\Elizabeth\\Baylor_Summer_2020\\Team_C_GIT\\log-errors\\scraper");
 
-        PeekableScanner scan = new PeekableScanner(new File(pathToLogFile));
+        commonClassStructure = ProjectStructureParser.getClassStructure(inputObject.getPathToSourceCodeDirectory());
+
+        PeekableScanner scan = new PeekableScanner(new File(inputObject.getPathToLogFile()));
         List<LogError> errors = new ArrayList<>();
         String nextLine;
         lineNum = 0;
@@ -52,7 +55,7 @@ public class LogErrorParser {
 
                 /** line is considered the beginning of an error. **/
                 log.info("Found Entry: " + lineNum);
-                errors.add(parseLine(scan.nextLine(), lineNum, pathToLogFile));
+                errors.add(parseLine(scan.nextLine(), lineNum, inputObject.getPathToLogFile()));
                 //Check if there is a traceback. If so update the error message.
                 while (tracebackEntryPattern.matcher(scan.peekLine()).matches()) {
                     /** line is the beginning of a traceback segment.**/

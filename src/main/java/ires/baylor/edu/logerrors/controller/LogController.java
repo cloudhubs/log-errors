@@ -20,7 +20,7 @@ public class LogController {
     public ResponseEntity<?> resolveErrors(@RequestBody ResolveErrorsRequest request)  {
         log.info("Request: " + request);
         try {
-            return new ResponseEntity<>(LogErrorParser.parseLog(request.getPathToLogFile()), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(LogErrorParser.parseLog(request), HttpStatus.ACCEPTED);
         }
         catch(FileNotFoundException e){
             return new ResponseEntity<>(e.getStackTrace(), HttpStatus.NO_CONTENT);
