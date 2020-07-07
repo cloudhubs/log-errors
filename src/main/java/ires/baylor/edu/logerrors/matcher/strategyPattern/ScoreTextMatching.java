@@ -6,10 +6,7 @@ import ires.baylor.edu.logerrors.model.LogError;
 import lombok.extern.slf4j.Slf4j;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -23,6 +20,8 @@ public class ScoreTextMatching implements MatcherAlgorithm {
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
         Map<Integer, List<ScraperObject>> ScraperObjectScores = new HashMap<>();
         int highscore = 0;
+        Objects.requireNonNull(logToMatch.getErrorMessage());
+
         String logErrorMsg = logToMatch.getErrorMessage().toUpperCase();
         String logErrorMsgAdvanced = replaceVars(logErrorMsg);
         int matchVal = 0;

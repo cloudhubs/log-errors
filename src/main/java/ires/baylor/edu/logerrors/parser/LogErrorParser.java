@@ -1,5 +1,6 @@
 package ires.baylor.edu.logerrors.parser;
 
+import ires.baylor.edu.logerrors.matcher.MatcherControllerParameters;
 import ires.baylor.edu.logerrors.model.ClassStructure;
 import ires.baylor.edu.logerrors.model.LogError;
 import ires.baylor.edu.logerrors.model.ResolveErrorsRequest;
@@ -29,6 +30,8 @@ public class LogErrorParser {
     static Pattern nestedEntryPattern = Pattern.compile(NESTED_REGEX);
     private static int lineNum;
     static ClassStructure commonClassStructure;
+    private static List<LogError> errors;
+    private static String pathToDir;
     /**
      * Tokenizes the log file.
      *
@@ -39,11 +42,11 @@ public class LogErrorParser {
 
         //commonClassStructure = ProjectStructureParser.getClassStructure(
         //        "C:\\Users\\Elizabeth\\Documents\\Elizabeth\\Baylor_Summer_2020\\Team_C_GIT\\log-errors\\scraper");
-
-        commonClassStructure = ProjectStructureParser.getClassStructure(inputObject.getPathToSourceCodeDirectory());
+        pathToDir = inputObject.getPathToSourceCodeDirectory();
+        commonClassStructure = ProjectStructureParser.getClassStructure(pathToDir);
 
         PeekableScanner scan = new PeekableScanner(new File(inputObject.getPathToLogFile()));
-        List<LogError> errors = new ArrayList<>();
+        errors = new ArrayList<>();
         String nextLine;
         lineNum = 0;
 
@@ -64,6 +67,7 @@ public class LogErrorParser {
                     List<String> traceback = addTraceback(scan);
                     deepest.setErrorMessage(traceback.get(traceback.size() - 1));
                     deepest.setTraceBacks(traceback);
+                    deepest.setSourceCodeLine(getSourceCodeLine(deepest));
                 }
             } else if (nestedEntryPattern.matcher(scan.peekLine()).matches()) {
 
@@ -76,6 +80,7 @@ public class LogErrorParser {
                 List<String> traceback = addTraceback(scan);
                 deepestNested.setErrorMessage(traceback.get(traceback.size() - 1));
                 deepestNested.setTraceBacks(traceback);
+                deepestNested.setSourceCodeLine(getSourceCodeLine(deepestNested));
                 deepest.setNestedError(deepestNested);
 
             } else {
@@ -83,6 +88,7 @@ public class LogErrorParser {
                 scan.nextLine();
             }
         }
+        //addSourceCodeLines(inputObject.getPathToSourceCodeDirectory());
         return errors;
     }
 
@@ -166,4 +172,35 @@ public class LogErrorParser {
 
         return lastError;
     }
+
+
+    private static String getSourceCodeLine(LogError current) {
+
+        String currentTrace = null;
+        String firstImport = null;
+
+        if(current != null) {
+            File folder = new File(pathToDir);
+
+            for(String str: current.getTraceBacks()) {
+                String [] strArray = str.split("\n");
+
+                currentTrace = strArray[1];
+
+                if(currentTrace != null && !currentTrace.isEmpty()) {
+                    if(!currentTrace.matches(".*import.*") && !currentTrace.matches(".*Traceback.*")) {
+                        break;
+                    } else if(firstImport == null && !currentTrace.matches(".*Traceback.*")) {
+                        firstImport = currentTrace;
+                    }
+
+                }
+            }
+            if(currentTrace == null || currentTrace.isEmpty()) {
+                currentTrace = firstImport;
+            }
+        }
+        return currentTrace;
+    }
+
 }
