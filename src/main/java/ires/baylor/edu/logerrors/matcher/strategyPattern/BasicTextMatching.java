@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class BasicTextMatching implements MatcherAlgorithm {
+public class BasicTextMatching extends MatcherAlgorithm {
     /**
      * Basic substring matching using text found from SO and data from the MongoDB
      *
