@@ -43,3 +43,7 @@ __pycache__/
 !requirements.txt
 
 ! .gitignore
+
+research
+
+research/*
