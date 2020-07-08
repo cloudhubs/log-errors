@@ -29,17 +29,53 @@ public class AssignWeight {
                 floatArray[i] = ORIGINAL_WEIGHT;
             }
         }
-
+        
         FileStructure fs = currentError.getCurrentFile(currentError.getSourceCodeFile());
         if(fs != null) {
             modifyWeights(PRIMARY, SECOND, fs);
 
-            FileStructure currentImport;
+            FileStructure currentImport = null;
             for(String str: fs.getImports()) {
-                currentImport = currentError.getFileFromImport(str);
-                if(currentImport != null) {
-                    modifyWeights(SECOND, THIRD, currentImport);
+                List<String> imports = currentError.parseImportString(str);
+                if(!imports.isEmpty()) {
+                    currentImport = currentError.getFileFromImport(imports.get(0));
                 }
+
+                for(String str2: imports) {
+                    if(imports.indexOf(str2) != 0) {
+                        if(error.getErrorMessage().contains(str2)) {
+                            System.out.println("HERE: " + str2);
+                            String[] getFullUseArray = error.getErrorMessage().split(" ");
+                            String getFullUse = null;
+                            for(String substring: getFullUseArray) {
+                                if(substring.contains(str2)) {
+                                    getFullUse = substring;
+                                    break;
+                                }
+                            }
+                            if(getFullUse.contains("=")) {
+                                if(getFullUse.matches(".*"+str+".*=.*")) {
+                                    System.out.println("First way");
+                                    getFullUse = getFullUse.replaceAll("=.*", "");
+                                } else {
+                                    getFullUse = getFullUse.replaceAll(".*=", "");
+                                }
+                            }
+
+                            int start = error.getErrorMessage().indexOf(getFullUse);
+                            for(int i = start; i < (getFullUse.length()+start); i++) {
+                                if(floatArray[i] == ORIGINAL_WEIGHT) {
+                                    floatArray[i] = PRIMARY;
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                /*if(currentImport != null) {
+                    modifyWeights(SECOND, THIRD, currentImport);
+                }*/
 
             }
         }

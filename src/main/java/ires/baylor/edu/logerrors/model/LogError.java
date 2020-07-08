@@ -2,6 +2,7 @@ package ires.baylor.edu.logerrors.model;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -43,19 +44,48 @@ public class LogError {
         return null;
     }
 
-    public FileStructure getFileFromImport(String importLine) {
-        String temp = importLine.replaceAll(".*from ","");
+    public List<String> parseImportString(String importLine) {
+        List<String> str = new ArrayList<>();
+        importLine = importLine.replaceAll("from ", "").replaceAll("import ", "");
 
-        if(importLine.matches("import.*")) {
-            temp = temp.replaceAll("import ", "");
-        } else if(importLine.matches(".*import.*")) {
-            temp = temp.replaceAll(" import.*", "");
+        if(importLine.matches(".*as.*")) {
+            String[] parsed = importLine.split(", ");
+            for(int i = 0; i < parsed.length; i++) {
+                String[] wordParse = parsed[i].split(" ");
+                for(int j = 0; j < wordParse.length; j++) {
+                    if(i == 0 && j == 0) {
+                        str.add(wordParse[j].replaceAll(".*\\.", ""));
+                    } else if(wordParse[j].matches(" *as *")) {
+                        str.remove(str.size() - 1);
+                        j++;
+                        str.add(wordParse[j].replaceAll(",", ""));
+
+                    } else {
+                        str.add(wordParse[j]);
+                    }
+                }
+
+            }
+        } else {
+            String [] parsed = importLine.split(" ");
+            for(String temp: parsed) {
+                if(!str.isEmpty()) {
+                    str.add(temp);
+                } else {
+                    str.add(temp.replaceAll(".*\\.", ""));
+                }
+            }
         }
-        temp = temp.replaceAll(".*\\.", "");
-        temp = temp + ".py";
+
+        return str;
+    }
+
+
+    public FileStructure getFileFromImport(String importLine) {
+        importLine = importLine + ".py";
         if (files != null) {
             for (FileStructure f : files) {
-                if (f.getFileName().equalsIgnoreCase(temp)) {
+                if (f.getFileName().equalsIgnoreCase(importLine)) {
                     return f;
                 }
             }
