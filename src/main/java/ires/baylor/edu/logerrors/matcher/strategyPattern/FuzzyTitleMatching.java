@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class FuzzyTitleMatching implements MatcherAlgorithm {
+public class FuzzyTitleMatching extends MatcherAlgorithm {
 
     /**
      * Matches the LogError to the StackOverflowQuestion array taken from the Database (Future implementation)

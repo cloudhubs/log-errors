@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class ScoreTextMatching implements MatcherAlgorithm {
+public class ScoreTextMatching extends MatcherAlgorithm {
     final static String VAR_REGEX = "(\'.*\'|\".*\")";
     final static String VAR_REPLACEMENT = "VAR_VAL";
     static Pattern VARIABLE_DETECTION = Pattern.compile(VAR_REGEX);
