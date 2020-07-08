@@ -1,7 +1,6 @@
 package ires.baylor.edu.logerrors.parser;
 
-import ires.baylor.edu.logerrors.matcher.MatcherControllerParameters;
-import ires.baylor.edu.logerrors.model.ClassStructure;
+import ires.baylor.edu.logerrors.model.FileStructure;
 import ires.baylor.edu.logerrors.model.LogError;
 import ires.baylor.edu.logerrors.model.ResolveErrorsRequest;
 import ires.baylor.edu.logerrors.util.PeekableScanner;
@@ -29,7 +28,8 @@ public class LogErrorParser {
     static Pattern tracebackEntryPattern = Pattern.compile(TRACEBACK_REGEX);
     static Pattern nestedEntryPattern = Pattern.compile(NESTED_REGEX);
     private static int lineNum;
-    static ClassStructure commonClassStructure;
+    static List<FileStructure> commonClassStructure;
+    static List<String> commonExternalSources;
     private static List<LogError> errors;
     private static String pathToDir;
     /**
@@ -43,7 +43,9 @@ public class LogErrorParser {
         //commonClassStructure = ProjectStructureParser.getClassStructure(
         //        "C:\\Users\\Elizabeth\\Documents\\Elizabeth\\Baylor_Summer_2020\\Team_C_GIT\\log-errors\\scraper");
         pathToDir = inputObject.getPathToSourceCodeDirectory();
+
         commonClassStructure = ProjectStructureParser.getClassStructure(pathToDir);
+        commonExternalSources = ProjectStructureParser.getRequirements(pathToDir);
 
         PeekableScanner scan = new PeekableScanner(new File(inputObject.getPathToLogFile()));
         errors = new ArrayList<>();
@@ -67,7 +69,10 @@ public class LogErrorParser {
                     List<String> traceback = addTraceback(scan);
                     deepest.setErrorMessage(traceback.get(traceback.size() - 1));
                     deepest.setTraceBacks(traceback);
-                    deepest.setSourceCodeLine(getSourceCodeLine(deepest));
+                    List<String> srcCode = getSourceCodeLine(deepest);
+                    deepest.setSourceCodeLine(srcCode.get(0));
+                    deepest.setSourceCodeFile(srcCode.get(1));
+                    deepest.setErrorCharWeight(AssignWeight.assignWeight(deepest));
                 }
             } else if (nestedEntryPattern.matcher(scan.peekLine()).matches()) {
 
@@ -80,7 +85,10 @@ public class LogErrorParser {
                 List<String> traceback = addTraceback(scan);
                 deepestNested.setErrorMessage(traceback.get(traceback.size() - 1));
                 deepestNested.setTraceBacks(traceback);
-                deepestNested.setSourceCodeLine(getSourceCodeLine(deepestNested));
+                List<String> srcCode = getSourceCodeLine(deepestNested);
+                deepestNested.setSourceCodeLine(srcCode.get(0));
+                deepestNested.setSourceCodeFile(srcCode.get(1));
+                deepestNested.setErrorCharWeight(AssignWeight.assignWeight(deepestNested));
                 deepest.setNestedError(deepestNested);
 
             } else {
@@ -104,7 +112,8 @@ public class LogErrorParser {
     private static LogError parseLine(String currentLine, int lineNum, String pathToLogFile) {
         LogError currentError = new LogError();
         //Create new LogError
-        currentError.setClassStructure(commonClassStructure);
+        currentError.setFiles(commonClassStructure);
+        currentError.setExternalPackages(commonExternalSources);
         currentError.setLineNumber(lineNum);
         currentError.setSource(pathToLogFile);
 
@@ -174,17 +183,21 @@ public class LogErrorParser {
     }
 
 
-    private static String getSourceCodeLine(LogError current) {
+    private static List<String> getSourceCodeLine(LogError current) {
 
         String currentTrace = null;
         String firstImport = null;
+        String fileName = null;
+        String firstImportFileName = null;
+        List<String> returnStr = new ArrayList<>();
+
 
         if(current != null) {
             File folder = new File(pathToDir);
 
             for(String str: current.getTraceBacks()) {
                 String [] strArray = str.split("\n");
-
+                fileName = strArray[0].replaceAll("\",.*", "").replaceAll(".*\".*/", "");
                 currentTrace = strArray[1];
 
                 if(currentTrace != null && !currentTrace.isEmpty()) {
@@ -192,15 +205,24 @@ public class LogErrorParser {
                         break;
                     } else if(firstImport == null && !currentTrace.matches(".*Traceback.*")) {
                         firstImport = currentTrace;
+                        firstImportFileName = fileName;
                     }
 
                 }
             }
             if(currentTrace == null || currentTrace.isEmpty()) {
                 currentTrace = firstImport;
+                fileName = firstImportFileName;
             }
         }
-        return currentTrace;
+        returnStr.add(currentTrace);
+        returnStr.add(fileName);
+
+        return returnStr;
     }
+
+
+
+
 
 }

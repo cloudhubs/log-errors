@@ -1,32 +1,33 @@
 package ires.baylor.edu.logerrors.parser;
-import ires.baylor.edu.logerrors.model.ClassStructure;
+import ires.baylor.edu.logerrors.model.FileStructure;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Scanner;
 
 @Slf4j
 public class ProjectStructureParser {
-    private static ClassStructure cs = null;
+    private static List<FileStructure> fs = null;
+    private static List<String> requirements = null;
 
-    public static ClassStructure getClassStructure(String current) {
-        cs = new ClassStructure();
+    public static List<FileStructure> getClassStructure(String current) {
+        fs = new ArrayList<>();
 
         if(current != null) {
             File folder = new File(current);
             try {
                 recursiveFunc(folder);
-                cs.removeDuplicates();
+                fs.forEach(t -> t.removeDuplicates());
             } catch (FileNotFoundException e) {
                 log.info("Unable to parce file structure given");
             }
         }
-        return cs;
+        return fs;
     }
+
 
     private static void recursiveFunc(File current) throws FileNotFoundException {
 
@@ -34,43 +35,78 @@ public class ProjectStructureParser {
         for (File f : listOfFiles) {
             if (f.isFile()) {
                 if (f.getName().endsWith(".py") && !f.getName().contains("__init__")) {
+
                     Scanner scan = new Scanner(f);
                     String currentLine = null;
+                    FileStructure temp = new FileStructure();
+                    temp.setFileName(f.getName());
+
                     while (scan.hasNextLine()) {
                         currentLine = scan.nextLine();
 
                         if (currentLine.matches("^from .* import .*") || currentLine.matches("^import .*")) {
                             // currentLine = currentLine.replaceFirst("^from ", "").replaceFirst("import ",
                             // "");
-                            cs.addImports(currentLine);
+                            temp.addImports(currentLine);
 
                         } else if (currentLine.matches(" *class .*: *")) {
                             currentLine = currentLine.replaceFirst(": *", "").replaceFirst(" *class ", "");
-                            cs.addClassName(currentLine);
+                            currentLine = currentLine.replaceAll("\\(.*\\)", "");
+                            temp.addClassName(currentLine);
 
                         } else if (currentLine.matches(" *def .*(.*): *") && !currentLine.contains("__init__")) {
+                            currentLine = currentLine.replaceAll("\\(.*\\)", "");
                             currentLine = currentLine.replaceFirst(": *", "").replaceFirst(" *def ", "");
-                            cs.addFuncName(currentLine);
+                            temp.addFuncName(currentLine);
 
                         } else if (currentLine.matches(".*=.*") && !currentLine.matches(".*#.*|.*(\\+|-|!|=|>|<)=.*")) {
                             if (currentLine.matches(".*self\\..*")){
-                                cs.addVarNames(currentLine.replaceAll(" *=.*", "").replaceAll(".*self\\.", "").replaceFirst(" *", ""));
+                                temp.addVarNames(currentLine.replaceAll(" *=.*", "").replaceAll(".*self\\.", "").replaceFirst(" *", ""));
                             } else if (!currentLine.replaceAll("=.*", "").matches(".*\\..*") && !currentLine.matches("[^=]*\\(.*=.*\\).*")) {
-                                cs.addVarNames(currentLine.replaceAll(" *=.*", "").replaceFirst(" *", "").replaceAll("\\[.*\\]", ""));
+                                temp.addVarNames(currentLine.replaceAll(" *=.*", "").replaceFirst(" *", "").replaceAll("\\[.*\\]", ""));
                             }
                         }
 
                     }
                     scan.close();
-                } else if (f.getName().equalsIgnoreCase("requirements.txt")) {
-                    Scanner scan = new Scanner(f);
-                    while (scan.hasNextLine()) {
-                        cs.addExternalPackages(scan.nextLine());
-                    }
-                    scan.close();
+                    fs.add(temp);
                 }
             } else if (f.isDirectory()) {
                 recursiveFunc(f);
+            }
+        }
+
+    }
+
+
+    public static List<String> getRequirements(String current) {
+        requirements = new ArrayList<>();
+        if(current != null) {
+            File folder = new File(current);
+            try {
+                getRecs(folder);
+            } catch (FileNotFoundException e) {
+                log.info("Unable to parce file structure given");
+            }
+        }
+        return requirements;
+    }
+
+
+    private static void getRecs(File current) throws FileNotFoundException {
+        File[] listOfFiles = current.listFiles();
+        for (File f : listOfFiles) {
+            if (f.isFile()) {
+                if (f.getName().equalsIgnoreCase("requirements.txt")) {
+                    Scanner scan = new Scanner(f);
+                    while (scan.hasNextLine()) {
+                        requirements.add(scan.nextLine());
+                    }
+                    scan.close();
+                    return;
+                }
+            } else if (f.isDirectory()) {
+                getRecs(f);
             }
         }
 

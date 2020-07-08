@@ -14,10 +14,11 @@ public class LogError {
     int lineNumber; // starting line number within the log file
 
     String sourceCodeLine;
-    ClassStructure classStructure; //List of classes and their respective functions and imports
+    String sourceCodeFile;
+    List<FileStructure> files; //List of classes and their respective functions and imports
+    List<String> externalPackages; //From requirements.txt file
 
-
-    List<Integer> errorCharWeight;
+    List<Float> errorCharWeight;
 
     Boolean isExternal;
     String errorMessage;
@@ -29,5 +30,36 @@ public class LogError {
 
     public LogError(List<String> traceBacks){
         this.traceBacks = traceBacks;
+    }
+
+    public FileStructure getCurrentFile(String filename) {
+        if (files != null) {
+            for (FileStructure f : files) {
+                if (f.getFileName().equalsIgnoreCase(filename)) {
+                    return f;
+                }
+            }
+        }
+        return null;
+    }
+
+    public FileStructure getFileFromImport(String importLine) {
+        String temp = importLine.replaceAll(".*from ","");
+
+        if(importLine.matches("import.*")) {
+            temp = temp.replaceAll("import ", "");
+        } else if(importLine.matches(".*import.*")) {
+            temp = temp.replaceAll(" import.*", "");
+        }
+        temp = temp.replaceAll(".*\\.", "");
+        temp = temp + ".py";
+        if (files != null) {
+            for (FileStructure f : files) {
+                if (f.getFileName().equalsIgnoreCase(temp)) {
+                    return f;
+                }
+            }
+        }
+        return null;
     }
 }
