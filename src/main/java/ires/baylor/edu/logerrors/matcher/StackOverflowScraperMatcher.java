@@ -9,9 +9,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+
 
 
 /**
@@ -33,12 +33,12 @@ public class StackOverflowScraperMatcher {
     public static List<ScraperObject> matchLog(MatcherControllerParameters parameters) throws IOException, GeneralSecurityException {
         int found = 0;
         while (found < 2) {
-            mongoConnector db = new mongoConnector();
-            List<Document> documents = db.getAllFrom(db.getCollection("coll_name"));
 
-            List<ScraperObject> obj = convertDocument(documents);
+            List<Document> documents = matcher.getAllDbDocuments("");
+
+            List<ScraperObject> obj = matcher.convertDocuments(documents);
+
             List<ScraperObject> textMatch = matcher.match(obj, parameters.getCurrentError());
-            //textMatch.addAll(fuzzyMatching(obj, parameters.getCurrentError().getErrorMessage()));
 
             List<ScraperObject> bestList = removeDups(textMatch);
 
@@ -62,11 +62,5 @@ public class StackOverflowScraperMatcher {
     private static List<ScraperObject> removeDups(List<ScraperObject> textMatch) {
         List<ScraperObject> listWithoutDuplicates = new ArrayList<>(new LinkedHashSet<>(textMatch));
         return listWithoutDuplicates;
-    }
-
-    private static List<ScraperObject> convertDocument(List<Document> documents) {
-        List<ScraperObject> scraper = new ArrayList<>();
-        documents.forEach(d -> scraper.add(new ScraperObject(d)));
-        return scraper;
     }
 }

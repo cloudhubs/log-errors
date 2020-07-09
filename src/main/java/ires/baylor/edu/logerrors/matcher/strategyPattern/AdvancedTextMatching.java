@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class AdvancedTextMatching implements MatcherAlgorithm{
+public class AdvancedTextMatching extends MatcherAlgorithm{
     final static String VAR_REGEX = "(\'.*\'|\".*\")";
     final static String VAR_REPLACEMENT = "VAR_VAL";
     static Pattern VARIABLE_DETECTION = Pattern.compile(VAR_REGEX);
