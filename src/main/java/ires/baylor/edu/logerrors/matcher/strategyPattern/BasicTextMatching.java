@@ -27,14 +27,14 @@ public class BasicTextMatching implements MatcherAlgorithm {
             }
             /*if (soq.getTitle().toUpperCase().contains(logErrorMsg.toUpperCase())) {
                 returnList.add(soq);
-            }*/ else {
+            }*/ else if(soq.getText() != null){
                 for (String text : soq.getText()) {
                     if (text.toUpperCase().contains(logErrorMsg)) {
                         returnList.add(soq);
                         break;
                     }
                 }
-                if(!returnList.contains(soq)) {
+                if(!returnList.contains(soq) && soq.getCode() != null) {
                     for(String code: soq.getCode()) {
                         if(code.toUpperCase().contains(logErrorMsg)) {
                             returnList.add(soq);

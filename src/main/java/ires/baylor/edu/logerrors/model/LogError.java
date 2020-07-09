@@ -29,9 +29,19 @@ public class LogError {
     List<ExternalLink> stackOverflow;
     List<ExternalLink> gitHub;
 
+
+
+    public LogError(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
     public LogError(List<String> traceBacks){
         this.traceBacks = traceBacks;
     }
+
+
+
+
 
     public FileStructure getCurrentFile(String filename) {
         if (files != null) {

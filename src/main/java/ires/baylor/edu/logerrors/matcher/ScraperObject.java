@@ -21,6 +21,11 @@ public class ScraperObject {
     List<String> text;
     List<String> tags;
 
+    public ScraperObject(String title, List<String> text, List<String> code) {
+        this.title = title;
+        this.text = text;
+        this.code = code;
+    }
 
     public ScraperObject(Document doc) {
         this.url = doc.getString("url");
