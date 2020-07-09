@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask as askdl, request, Response, Blueprint, jsonify
+from flask import Flask, request, Response, Blueprint, jsonify
 from pymongo import MongoClient
 from flask_cors import cross_origin, CORS
 from bson.json_util import dumps
