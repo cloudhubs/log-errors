@@ -19,22 +19,28 @@ public class BasicTextMatching extends MatcherAlgorithm {
      */
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
+        if(SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {
+            return new ArrayList<>();
+        }
         List<ScraperObject> returnList = new ArrayList<>();
         String logErrorMsg = logToMatch.getErrorMessage().toUpperCase();
         for (ScraperObject soq : SOFromDB) {
+            if(soq.getTitle() == null) {
+                continue;
+            }
             if(FuzzySearch.tokenSortPartialRatio(logErrorMsg, soq.getTitle().toUpperCase()) >= PERCENT_MATCH) {
                 returnList.add(soq);
             }
             /*if (soq.getTitle().toUpperCase().contains(logErrorMsg.toUpperCase())) {
                 returnList.add(soq);
-            }*/ else {
+            }*/ else if(soq.getText() != null){
                 for (String text : soq.getText()) {
                     if (text.toUpperCase().contains(logErrorMsg)) {
                         returnList.add(soq);
                         break;
                     }
                 }
-                if(!returnList.contains(soq)) {
+                if(!returnList.contains(soq) && soq.getCode() != null) {
                     for(String code: soq.getCode()) {
                         if(code.toUpperCase().contains(logErrorMsg)) {
                             returnList.add(soq);
