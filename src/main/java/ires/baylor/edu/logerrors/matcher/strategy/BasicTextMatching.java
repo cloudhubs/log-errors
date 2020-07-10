@@ -1,6 +1,6 @@
-package ires.baylor.edu.logerrors.matcher.strategyPattern;
+package ires.baylor.edu.logerrors.matcher.strategy;
 
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
 import ires.baylor.edu.logerrors.model.LogError;
 import lombok.extern.slf4j.Slf4j;
 import me.xdrop.fuzzywuzzy.FuzzySearch;

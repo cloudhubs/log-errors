@@ -1,24 +1,25 @@
-package ires.baylor.edu.logerrors.matcher.strategyPattern;
+package ires.baylor.edu.logerrors.matcher.strategy;
 
-import com.google.common.base.Splitter;
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.util.RegexCache;
+import ires.baylor.edu.logerrors.matcher.util.mongoConnector;
 import ires.baylor.edu.logerrors.model.LogError;
-import lombok.extern.slf4j.Slf4j;
-import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.bson.Document;
 
 
-public class SubWeight implements MatcherAlgorithm {
+public class SubWeight extends MatcherAlgorithm {
     private static final String _whitespace = "\\s*";
     private static final String _wild = ".*";
     private static Double _max_regex_score;
     private final int _worst_score = 80;
     List<Double> weights;
+    String regex;
 
     public SubWeight(List<Double> weights) {
         this.weights = weights;
@@ -26,8 +27,17 @@ public class SubWeight implements MatcherAlgorithm {
     }
 
     public Boolean isStructuralMatch(String code) {
-        StringBuilder sb = new StringBuilder();
 
+        this.regex = setRegex(code);
+
+        Pattern p = Pattern.compile(this.regex);
+        Matcher m = p.matcher(code);
+
+        return m.find();
+    }
+
+    private String setRegex(String code) {
+        StringBuilder sb = new StringBuilder();
         boolean wild = false;
 
         for (int i = 0; i < this.weights.size(); i++) {
@@ -59,12 +69,7 @@ public class SubWeight implements MatcherAlgorithm {
             }
         }
 
-        System.out.println(sb.toString());
-
-        Pattern p = Pattern.compile(sb.toString());
-        Matcher m = p.matcher(code);
-
-        return m.find();
+        return sb.toString();
     }
 
     private double weightedMatch(String entity, String against) {
@@ -74,12 +79,11 @@ public class SubWeight implements MatcherAlgorithm {
             return score;
         }
 
-        // if the structure is correct then apply needleman-wunsch
+        // if the structure is correct then apply levenstein
         // this.weights is a list of integer values indicating the importance of each char. Lets assume they are
         // between 0, meaning not important and 1, meaning important
         // we need to tokenize the weights into essential and non-essential sections.
-        LevenshteinDistance distance = new LevenshteinDistance();
-        score = (double) distance.apply(entity, against);
+        score = (double) new LevenshteinDistance().apply(entity, against);
 
         return score;
     }
@@ -98,6 +102,13 @@ public class SubWeight implements MatcherAlgorithm {
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
         List<ScraperObject> matched = new ArrayList<>();
 
+        this.regex = setRegex(logToMatch.getErrorCode());
+
+        String cached_id = RegexCache.check(this.regex);
+        if(RegexCache.check(this.regex) != ""){
+            return (List<ScraperObject>) RegexCache.get(cached_id).get("so_post");
+        }
+
         for (ScraperObject dbEntry : SOFromDB) {
 
             if (logToMatch.getErrorMessage().length() != this.weights.size()) {
@@ -105,18 +116,27 @@ public class SubWeight implements MatcherAlgorithm {
             }
 
             //check entries against threshold
-            if (PERCENT_MATCH <= matchListAgainst(dbEntry.getCode(), logToMatch.getErrorMessage())) {
+            if (PERCENT_MATCH <= matchListAgainst(dbEntry.getCode(), logToMatch.getErrorCode())) {
                 // add to list
                 matched.add(dbEntry);
             }
 
-            if (PERCENT_MATCH <= matchListAgainst(dbEntry.getText(), logToMatch.getErrorMessage())) {
+            if (PERCENT_MATCH <= matchListAgainst(dbEntry.getText(), logToMatch.getErrorCode())) {
                 // add to lsit
                 matched.add(dbEntry);
-
             }
         }
 
+        RegexCache.add(this.regex,matched);
+
         return matched;
+    }
+
+    @Override
+    public List<Document> getAllDbDocuments(String qualifier) {
+        // no qualifier used in the abstract class implementation
+
+        mongoConnector db = new mongoConnector();
+        return db.findWithRegex(db.getCollection("coll_name"), qualifier);
     }
 }

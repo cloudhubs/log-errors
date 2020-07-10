@@ -1,6 +1,6 @@
 package ires.baylor.edu.logerrors;
 
-import ires.baylor.edu.logerrors.matcher.strategyPattern.SubWeight;
+import ires.baylor.edu.logerrors.matcher.strategy.SubWeight;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -1,4 +1,4 @@
-package ires.baylor.edu.logerrors.matcher;
+package ires.baylor.edu.logerrors.matcher.util;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;

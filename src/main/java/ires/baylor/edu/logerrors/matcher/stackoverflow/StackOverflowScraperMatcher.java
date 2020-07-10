@@ -1,7 +1,11 @@
-package ires.baylor.edu.logerrors.matcher;
+package ires.baylor.edu.logerrors.matcher.stackoverflow;
 
-import ires.baylor.edu.logerrors.matcher.strategyPattern.MatcherAlgorithm;
-import ires.baylor.edu.logerrors.matcher.strategyPattern.ScoreTextMatching;
+import ires.baylor.edu.logerrors.matcher.util.GoogleSearch;
+import ires.baylor.edu.logerrors.matcher.MatcherControllerParameters;
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperConnector;
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.strategy.MatcherAlgorithm;
+import ires.baylor.edu.logerrors.matcher.strategy.ScoreTextMatching;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 

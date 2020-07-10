@@ -1,13 +1,12 @@
-package ires.baylor.edu.logerrors.matcher.strategyPattern;
+package ires.baylor.edu.logerrors.matcher.strategy;
 
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
-import ires.baylor.edu.logerrors.matcher.mongoConnector;
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.util.mongoConnector;
 import ires.baylor.edu.logerrors.model.LogError;
 import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bson.Document;
 
 
 public abstract class MatcherAlgorithm {
