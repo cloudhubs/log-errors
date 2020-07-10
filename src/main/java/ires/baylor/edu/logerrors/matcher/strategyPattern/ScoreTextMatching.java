@@ -18,15 +18,20 @@ public class ScoreTextMatching implements MatcherAlgorithm {
 
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
+        if(SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {
+            return new ArrayList<>();
+        }
         Map<Integer, List<ScraperObject>> ScraperObjectScores = new HashMap<>();
         int highscore = 0;
-        Objects.requireNonNull(logToMatch.getErrorMessage());
 
         String logErrorMsg = logToMatch.getErrorMessage().toUpperCase();
         String logErrorMsgAdvanced = replaceVars(logErrorMsg);
         int matchVal = 0;
 
         for(ScraperObject soq: SOFromDB) {
+            if(soq.getTitle() == null) {
+                continue;
+            }
             int score = 0;
             String title = replaceVars(soq.getTitle());
             if (soq.getTitle().toUpperCase().contains(logErrorMsg.toUpperCase())) {
@@ -36,20 +41,22 @@ public class ScoreTextMatching implements MatcherAlgorithm {
             } else if((matchVal = FuzzySearch.tokenSortPartialRatio(logErrorMsgAdvanced, title)) >= 60) {
                 score += Math.round(matchVal/10.0) * 10 * 2;
             }
-
-            for (String text : soq.getText()) {
-                if (text.toUpperCase().contains(logErrorMsg)) {
-                    score += 30;
-                } else if (replaceVars(text).contains(logErrorMsgAdvanced)) {
-                    score += 20;
+            if(soq.getText() != null) {
+                for (String text : soq.getText()) {
+                    if (text.toUpperCase().contains(logErrorMsg)) {
+                        score += 30;
+                    } else if (replaceVars(text).contains(logErrorMsgAdvanced)) {
+                        score += 20;
+                    }
                 }
             }
-
-            for(String code: soq.getCode()) {
-                if(code.toUpperCase().contains(logErrorMsg)) {
-                    score += 30;
-                } else if(replaceVars(code).contains(logErrorMsgAdvanced)) {
-                    score +=20;
+            if(soq.getCode() != null) {
+                for (String code : soq.getCode()) {
+                    if (code.toUpperCase().contains(logErrorMsg)) {
+                        score += 30;
+                    } else if (replaceVars(code).contains(logErrorMsgAdvanced)) {
+                        score += 20;
+                    }
                 }
             }
 

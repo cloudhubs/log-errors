@@ -2,15 +2,20 @@ package ires.baylor.edu.logerrors.strategyPatternTest;
 
 import ires.baylor.edu.logerrors.matcher.ScraperObject;
 import ires.baylor.edu.logerrors.matcher.strategyPattern.BasicTextMatching;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class BasicTextMatchingTest implements MatcherAlgorithmTest {
-    BasicTextMatching basic = new BasicTextMatching();
+public class BasicTextMatchingTest extends MatcherAlgorithmTest {
+    @BeforeAll
+    public static void init() {
+        matcher = new BasicTextMatching();
+    }
+
     @Test
     public void basicTest() {
-        List<ScraperObject> returnList = basic.match(scraperObj, error1);
+        List<ScraperObject> returnList = matcher.match(scraperObj, error1);
         assert returnList.size() == 1;
         for(ScraperObject obj: returnList) {
             assert obj.getTitle().equals("How does python unit testing work?");
@@ -18,7 +23,7 @@ public class BasicTextMatchingTest implements MatcherAlgorithmTest {
     }
     @Test
     public void BroadTest() {
-        List<ScraperObject> returnList = basic.match(scraperObj, broadError);
+        List<ScraperObject> returnList = matcher.match(scraperObj, broadError);
         assert returnList.size() == 3;
         for(ScraperObject obj: returnList) {
             assert obj.getTitle().matches(".*(P|p)ython.*");
@@ -26,7 +31,7 @@ public class BasicTextMatchingTest implements MatcherAlgorithmTest {
     }
     @Test
     public void InTextAndCodeTest() {
-        List<ScraperObject> returnList = basic.match(scraperObj2, broadError);
+        List<ScraperObject> returnList = matcher.match(scraperObj2, broadError);
         assert returnList.size() == 3;
     }
 

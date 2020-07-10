@@ -19,9 +19,15 @@ public class BasicTextMatching implements MatcherAlgorithm {
      */
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
+        if(SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {
+            return new ArrayList<>();
+        }
         List<ScraperObject> returnList = new ArrayList<>();
         String logErrorMsg = logToMatch.getErrorMessage().toUpperCase();
         for (ScraperObject soq : SOFromDB) {
+            if(soq.getTitle() == null) {
+                continue;
+            }
             if(FuzzySearch.tokenSortPartialRatio(logErrorMsg, soq.getTitle().toUpperCase()) >= PERCENT_MATCH) {
                 returnList.add(soq);
             }

@@ -18,12 +18,18 @@ public class AdvancedTextMatching implements MatcherAlgorithm{
 
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
+        if(SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {
+            return new ArrayList<>();
+        }
         List<ScraperObject> returnList = new ArrayList<>();
         List<ScraperObject> returnListAdvanced = new ArrayList<>();
 
         String logErrorMsg = logToMatch.getErrorMessage().toUpperCase();
         String logErrorMsgAdvanced = replaceVars(logErrorMsg);
         for (ScraperObject soq : SOFromDB) {
+            if(soq.getTitle() == null) {
+                continue;
+            }
             String title = replaceVars(soq.getTitle());
             if(FuzzySearch.tokenSortPartialRatio(logErrorMsg, soq.getTitle().toUpperCase()) >= PERCENT_MATCH) {
                 returnList.add(soq);
@@ -32,18 +38,20 @@ public class AdvancedTextMatching implements MatcherAlgorithm{
             } else if(FuzzySearch.tokenSortPartialRatio(logErrorMsgAdvanced, title) >= PERCENT_MATCH) {
                 returnListAdvanced.add(soq);
             } else {
-                for (String text : soq.getText()) {
-                    if (text.toUpperCase().contains(logErrorMsg)) {
-                        returnList.add(soq);
-                        break;
-                    }
-                    text = replaceVars(text);
-                    if (text.contains(logErrorMsgAdvanced)) {
-                        returnListAdvanced.add(soq);
-                        break;
+                if(soq.getText() != null) {
+                    for (String text : soq.getText()) {
+                        if (text.toUpperCase().contains(logErrorMsg)) {
+                            returnList.add(soq);
+                            break;
+                        }
+                        text = replaceVars(text);
+                        if (text.contains(logErrorMsgAdvanced)) {
+                            returnListAdvanced.add(soq);
+                            break;
+                        }
                     }
                 }
-                if(!returnList.contains(soq)) {
+                if(!returnList.contains(soq) && soq.getCode() != null) {
                     for(String code: soq.getCode()) {
                         if(code.toUpperCase().contains(logErrorMsg)) {
                             returnList.add(soq);

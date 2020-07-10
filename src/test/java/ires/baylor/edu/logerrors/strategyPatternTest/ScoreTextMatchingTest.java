@@ -2,15 +2,19 @@ package ires.baylor.edu.logerrors.strategyPatternTest;
 
 import ires.baylor.edu.logerrors.matcher.ScraperObject;
 import ires.baylor.edu.logerrors.matcher.strategyPattern.ScoreTextMatching;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class ScoreTextMatchingTest implements MatcherAlgorithmTest {
-    ScoreTextMatching score = new ScoreTextMatching();
+public class ScoreTextMatchingTest extends MatcherAlgorithmTest {
+    @BeforeAll
+    public static void init() {
+        matcher = new ScoreTextMatching();
+    }
     @Test
     public void basicTest() {
-        List<ScraperObject> returnList = score.match(scraperObj, error1);
+        List<ScraperObject> returnList = matcher.match(scraperObj, error1);
         for(ScraperObject obj: returnList) {
             System.out.println(obj.getTitle());
         }
@@ -21,7 +25,7 @@ public class ScoreTextMatchingTest implements MatcherAlgorithmTest {
     }
     @Test
     public void BroadTest() {
-        List<ScraperObject> returnList = score.match(scraperObj, error2);
+        List<ScraperObject> returnList = matcher.match(scraperObj, error2);
         assert returnList.size() == 3;
 
         assert returnList.get(0).getTitle().equals("Python testing error: file not found");
@@ -31,9 +35,13 @@ public class ScoreTextMatchingTest implements MatcherAlgorithmTest {
     }
     @Test
     public void InTextAndCodeTest() {
-        List<ScraperObject> returnList = score.match(scraperObj2, broadError);
+        List<ScraperObject> returnList = matcher.match(scraperObj2, broadError);
         assert returnList.size() == 3;
     }
-
+    @Test
+    void weirdSyntax() {
+        //Should have same result as basicTest
+        assert matcher.match(scraperObj, errorSyntax).size() == 2;
+    }
 
 }
