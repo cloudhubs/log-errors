@@ -102,7 +102,7 @@ public class SubWeight extends MatcherAlgorithm {
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
         List<ScraperObject> matched = new ArrayList<>();
 
-        this.regex = setRegex(logToMatch.getErrorCode());
+        this.regex = setRegex(logToMatch.getSourceCodeLine());
 
         String cached_id = RegexCache.check(this.regex);
         if(RegexCache.check(this.regex) != ""){
@@ -116,12 +116,12 @@ public class SubWeight extends MatcherAlgorithm {
             }
 
             //check entries against threshold
-            if (PERCENT_MATCH <= matchListAgainst(dbEntry.getCode(), logToMatch.getErrorCode())) {
+            if (PERCENT_MATCH <= matchListAgainst(dbEntry.getCode(), logToMatch.getSourceCodeLine())) {
                 // add to list
                 matched.add(dbEntry);
             }
 
-            if (PERCENT_MATCH <= matchListAgainst(dbEntry.getText(), logToMatch.getErrorCode())) {
+            if (PERCENT_MATCH <= matchListAgainst(dbEntry.getText(), logToMatch.getSourceCodeLine())) {
                 // add to lsit
                 matched.add(dbEntry);
             }
