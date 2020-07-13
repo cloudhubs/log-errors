@@ -1,6 +1,6 @@
-package ires.baylor.edu.logerrors.matcher.strategyPattern;
+package ires.baylor.edu.logerrors.matcher.strategy;
 
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
 import ires.baylor.edu.logerrors.model.LogError;
 import lombok.extern.slf4j.Slf4j;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
@@ -20,8 +20,14 @@ public class FuzzyTitleMatching extends MatcherAlgorithm {
      */
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
+        if(SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {
+            return new ArrayList<>();
+        }
         List<ScraperObject> returnList = new ArrayList<>();
         for (ScraperObject soq : SOFromDB) {
+            if(soq.getTitle() == null) {
+                continue;
+            }
             if (FuzzySearch.tokenSortPartialRatio(logToMatch.getErrorMessage(), soq.getTitle()) >= PERCENT_MATCH) {
                 returnList.add(soq);
             }

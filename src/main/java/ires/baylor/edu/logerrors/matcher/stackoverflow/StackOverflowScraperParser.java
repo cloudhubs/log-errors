@@ -1,4 +1,4 @@
-package ires.baylor.edu.logerrors.matcher;
+package ires.baylor.edu.logerrors.matcher.stackoverflow;
 
 import java.io.Reader;
 import java.util.List;

@@ -1,11 +1,11 @@
-package ires.baylor.edu.logerrors.matcher;
+package ires.baylor.edu.logerrors.matcher.scraper;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.Document;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +20,20 @@ public class ScraperObject {
     List<String> code;
     List<String> text;
     List<String> tags;
+
+    public ScraperObject(String title, List<String> text, List<String> code) {
+        this.title = title;
+        this.text = text;
+        this.code = code;
+    }
+    public ScraperObject(List<String> text, List<String> code) {
+        this.text = text;
+        this.code = code;
+    }
+    public ScraperObject(String title, List<String> code) {
+        this.title = title;
+        this.code = code;
+    }
 
 
     public ScraperObject(Document doc) {
