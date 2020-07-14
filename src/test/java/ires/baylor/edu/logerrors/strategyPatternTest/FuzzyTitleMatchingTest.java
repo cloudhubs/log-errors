@@ -1,7 +1,9 @@
 package ires.baylor.edu.logerrors.strategyPatternTest;
 
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
-import ires.baylor.edu.logerrors.matcher.strategyPattern.FuzzyTitleMatching;
+
+
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.strategy.FuzzyTitleMatching;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
