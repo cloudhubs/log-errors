@@ -1,7 +1,8 @@
 package ires.baylor.edu.logerrors.strategyPatternTest;
 
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
-import ires.baylor.edu.logerrors.matcher.strategyPattern.ScoreTextMatching;
+
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.strategy.ScoreTextMatching;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

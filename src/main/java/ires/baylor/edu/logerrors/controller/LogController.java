@@ -1,6 +1,5 @@
 package ires.baylor.edu.logerrors.controller;
 
-import ires.baylor.edu.logerrors.model.LogError;
 import ires.baylor.edu.logerrors.model.ResolveErrorsRequest;
 import ires.baylor.edu.logerrors.parser.LogErrorParser;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 
 @Slf4j
 @RestController

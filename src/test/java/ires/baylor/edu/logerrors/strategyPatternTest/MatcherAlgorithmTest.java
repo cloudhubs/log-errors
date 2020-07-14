@@ -1,7 +1,8 @@
 package ires.baylor.edu.logerrors.strategyPatternTest;
 
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
-import ires.baylor.edu.logerrors.matcher.strategyPattern.MatcherAlgorithm;
+
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.strategy.MatcherAlgorithm;
 import ires.baylor.edu.logerrors.model.LogError;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
