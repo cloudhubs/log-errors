@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request, Response, Blueprint
 from flask_cors import cross_origin, CORS
 
 from d2v.training import create_data, train_d2v
-from naive_bayes.bayes_matcher import train_bayes
+from naive_bayes.bayes_trainer import train_bayes
 
 train_controller = Blueprint('train_controller', __name__, template_folder='templates')
 
