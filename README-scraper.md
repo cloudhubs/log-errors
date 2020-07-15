@@ -234,3 +234,11 @@
 
 ## Success Response
 **Code**: `200 OK`
+
+# Add Custom Url to database, (Will scrape the url before insertion)
+**URL** : `/mongo/test/url`
+
+**Method** : `POST`
+
+## Success Response
+**Code**: `200 OK`
