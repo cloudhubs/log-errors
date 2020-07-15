@@ -27,6 +27,7 @@ import ires.baylor.edu.logerrors.matcher.MatcherControllerParameters;
 import ires.baylor.edu.logerrors.matcher.ScraperObject;
 import ires.baylor.edu.logerrors.matcher.StackOverflowScraperMatcher;
 import ires.baylor.edu.logerrors.matcher.mongoConnector;
+import ires.baylor.edu.logerrors.matcher.strategyPattern.MachineLearningMatcher;
 import ires.baylor.edu.logerrors.model.LogError;
 import ires.baylor.edu.logerrors.model.ResolveErrorsRequest;
 import ires.baylor.edu.logerrors.parser.LogErrorParser;
@@ -92,10 +93,12 @@ public class MachineLearningTrainerController {
 	 * requested by the Python side of the ML matcher.
 	 */
 	private String parseFromDB() {
-		MachineLearningTrainerController mltc = new MachineLearningTrainerController();
-		List<ScraperObject> objs = mltc.getGoodQuestions();
+		return getJsonForML(getGoodQuestions());
+	}
+
+	private String getJsonForML(List<ScraperObject> objs) {
 		List<TestData> td = objs.stream()
-				.map(obj -> new TestData(obj.getUrl(), obj.getTitle(), mltc.getStackTrace(obj.getCode())))
+				.map(obj -> new TestData(obj.getUrl(), obj.getTitle(), getStackTrace(obj.getCode())))
 				.collect(Collectors.toList());
 		return writer.toJson(td);
 	}
