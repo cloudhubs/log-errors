@@ -1,4 +1,4 @@
-package ires.baylor.edu.logerrors.model;
+package ires.baylor.edu.logerrors.unusedCode;
 
 import lombok.*;
 

@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
 
+/**
+ * Error controller. This controller takes a log file and a source code directory
+ * and returns all of the errors found inside the log file in the LogError structure
+ */
 @Slf4j
 @RestController
 public class LogController {

@@ -8,15 +8,17 @@ import org.bson.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Parent class for all Algorithms. This class is able to get documents from the database
+ * and convert the documents into a List of ScraperObjects. The shared function of all the
+ * algorithms is the match() function
+ */
 public abstract class MatcherAlgorithm {
     public static final int PERCENT_MATCH = 85;
 
     public abstract List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch);
 
     public List<Document> getAllDbDocuments(String qualifier){
-        // no qualifier used in the abstract class implementation
-
         mongoConnector db = new mongoConnector();
         return db.getAllFrom(db.getCollection("coll_name"));
     }
