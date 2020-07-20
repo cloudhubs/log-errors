@@ -31,6 +31,15 @@ This will use pycharm as the IDE of choice. (Assuming you have already cloned th
     ```
 6. To run the project right click in `api/main.py` and select `run`
 
+7. Alternatively using bash:
+
+```
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip3 install -r requirements.txt
+$ python3 main.py
+```
+
 # Log Parser API
 **Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
 - [Parse File](README-matcher.md): `POST /errors/`
