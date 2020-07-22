@@ -1,8 +1,8 @@
 from flask import Flask
-from flask_cors import CORS
 
 from api.train_controller import train_controller
 from api.match_controller import match_controller
+
 
 if __name__ == "__main__":
     application = Flask(__name__)

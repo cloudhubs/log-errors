@@ -13,7 +13,7 @@ from sklearn.preprocessing import minmax_scale
 from util.matcher_util import create_entry_objects
 
 
-# Trains the Naive Bayes
+# Trains the Naive Bayes using raw data
 def train_bayes(good_data_filename: str):
     # Get and fit data
     data, cats = create_data(good_data_filename)
