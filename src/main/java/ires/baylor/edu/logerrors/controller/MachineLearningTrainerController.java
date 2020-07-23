@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -94,42 +96,63 @@ public class MachineLearningTrainerController {
 //			ex.printStackTrace();
 //		}
 		Gson gson = new GsonBuilder().create();
+		Set<String> record = new HashSet<>();
 		List<TestData> result = new ArrayList<>();
-		final Pattern start = Pattern.compile("Traceback");
+		final Pattern start = Pattern.compile(TRACE_RAW);
 		final Pattern end = Pattern.compile(".*?Error:.*");
-		
-		Temp[] tmps;
-		for (int i = 66; i < 88; i++) {
-			System.out.println(i);
-			try (BufferedReader br = Files.newBufferedReader(Paths.get("./machine_learning/data/good_snippets" + i + ".json"))) {
-				tmps = gson.fromJson(br, Temp[].class);
-				for (Temp tmp : tmps) {
-					String[] title = tmp.link.split("/");
-					
-					// Get trace
-					Matcher st = start.matcher(tmp.snippet),
-							ed = end.matcher(tmp.snippet);
-					st.find();
-					String trace;
-					if (ed.find(st.start())) {
-						int ndx;
-						do {
-							ndx = ed.end();
-						} while (ed.find(ndx));
-						trace = tmp.snippet.substring(st.start(), ndx);
-					} else
-						trace = tmp.snippet.substring(st.start());
-					result.add(new TestData(tmp.link, title[title.length - 1], trace));
+
+		for (int segment = 0; segment < 4; segment++) {
+			Temp[] tmps;
+			for (int i = segment * 22; i < (segment + 1) * 22; i++) {
+				System.out.println(i);
+				try (BufferedReader br = Files
+						.newBufferedReader(Paths.get("./machine_learning/data/good_snippets" + i + ".json"))) {
+					tmps = gson.fromJson(br, Temp[].class);
+					for (Temp tmp : tmps) {
+						// Filter already-discovered entries
+						String[] title = tmp.link.split("/");
+						String trueTitle = title[title.length - 1];
+						if (record.contains(trueTitle))
+							continue;
+						else
+							record.add(trueTitle);
+
+						// Find stack trace, if it exists
+						try {
+							// Find start of trace and ensure there are no other traces in this snippet
+							Matcher st = start.matcher(tmp.snippet), ed = end.matcher(tmp.snippet);
+							st.find();
+							int startIndex = st.start();
+							if (st.find()) {
+//								System.err.println("Bad entry, continue");
+								continue;
+							}
+
+							// Find end of trace
+							String trace;
+							if (ed.find(startIndex)) {
+								int ndx;
+								do {
+									ndx = ed.end();
+								} while (ed.find(ndx));
+								trace = tmp.snippet.substring(startIndex, ndx);
+							} else
+								trace = tmp.snippet.substring(startIndex);
+							result.add(new TestData(tmp.link, title[title.length - 1], trace));
+						} catch (IllegalStateException ex) {
+							System.err.println(String.format("No trace for \"%1$s\"", tmp.snippet));
+						}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
 			}
-		}
-		
-		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./train_attempt_2c.json"))) {
-			bw.write(gson.toJson(result));
-		} catch (IOException e) {
-			e.printStackTrace();
+
+			try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./train_attempt_3_" + segment + ".json"))) {
+				bw.write(gson.toJson(result));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -156,7 +179,8 @@ public class MachineLearningTrainerController {
 				.filter(e -> e.getText().size() > 1 && containsStackTrace(e)).collect(Collectors.toList());
 	}
 
-	private static final Pattern TRACE = Pattern.compile("Traceback");
+	private static final String TRACE_RAW = "Traceback";
+	private static final Pattern TRACE = Pattern.compile(TRACE_RAW);
 
 	/**
 	 * Stupid simple check for a stack trace
@@ -187,7 +211,7 @@ public class MachineLearningTrainerController {
 	private String getStackTrace(List<String> code) {
 		for (String snippet : code)
 			if (containsStackTrace(snippet)) {
-				return "Traceback" + snippet.split("Traceback")[1];
+				return TRACE_RAW + snippet.split(TRACE_RAW, 2)[1];
 			}
 		return null;
 	}
