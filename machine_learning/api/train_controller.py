@@ -6,10 +6,12 @@ from flask_cors import cross_origin, CORS
 
 from d2v.training import create_data, train_d2v
 from naive_bayes.bayes_trainer import train_bayes
+from service.train_service import train_d2v_service, convert_to_d2v_service
 
 train_controller = Blueprint('train_controller', __name__, template_folder='templates')
 
-TRAIN_FILE: str = "train"
+TITLE_FILE: str = "titles"
+TRACE_FILE: str = "traces"
 
 
 @train_controller.route("/train")
@@ -21,36 +23,18 @@ def home():
 @train_controller.route("/train/d2v", methods=["POST"])
 @cross_origin()
 def train_d2v_endpoint():
-    print("Request made")
-    filenames: list = request.json.get("filenames")
+    return train_d2v_service(request.json.get("filenames"))
 
-    # Clear data file
-    tmpFile = open(TRAIN_FILE, "w")
-    tmpFile.close()
 
-    # Transform data
-    for filename in filenames:
-        print("Handle file " + filename)
-        with open(filename, "r") as input_file:
-            create_data(TRAIN_FILE, json.loads(input_file.read()))
-    print("Parsing complete")
-    model = train_d2v(TRAIN_FILE)
-    print("Saving model")
-    model.save("./dictionary.d2v")
-    return "Training complete"
+@train_controller.route("/train/d2v/convert", methods=["POST"])
+@cross_origin()
+def convert_to_d2v_endpoint():
+    return convert_to_d2v_service(request.json.get("filenames"))
 
 
 @train_controller.route("/train/naive-bayes", methods=["POST"])
 @cross_origin()
-def train():
+def train_bayes_endpoint():
     good_data: str = request.json.get("good_data", type=str)
-    train_bayes(good_data)
-    return "Training complete"
-
-
-@train_controller.route("/train/naive-bayes", methods=["GET"])
-@cross_origin()
-def train():
-    good_data: str = request.args.get("good_data", type=str)
     train_bayes(good_data)
     return "Training complete"

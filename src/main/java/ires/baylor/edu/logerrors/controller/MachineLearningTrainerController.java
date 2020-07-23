@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -75,16 +77,59 @@ public class MachineLearningTrainerController {
 		return new ResponseEntity<>(parseFromDB(), HttpStatus.ACCEPTED);
 	}
 
+	/** Temporary, format from ad-hoc dipta scraper */
+	class Temp {
+		public String link, snippet;
+	}
+
 	/**
 	 * Testing method to allow the translator to be run from the command line
 	 * 
 	 * @param args CL args
 	 */
 	public static void main(String[] args) {
-		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./ml_good_data.json"))) {
-			bw.write(new MachineLearningTrainerController().parseFromDB());
-		} catch (Exception ex) {
-			ex.printStackTrace();
+//		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./ml_good_data.json"))) {
+//			bw.write(new MachineLearningTrainerController().parseFromDB());
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
+		Gson gson = new GsonBuilder().create();
+		List<TestData> result = new ArrayList<>();
+		final Pattern start = Pattern.compile("Traceback");
+		final Pattern end = Pattern.compile(".*?Error:.*");
+		
+		Temp[] tmps;
+		for (int i = 66; i < 88; i++) {
+			System.out.println(i);
+			try (BufferedReader br = Files.newBufferedReader(Paths.get("./machine_learning/data/good_snippets" + i + ".json"))) {
+				tmps = gson.fromJson(br, Temp[].class);
+				for (Temp tmp : tmps) {
+					String[] title = tmp.link.split("/");
+					
+					// Get trace
+					Matcher st = start.matcher(tmp.snippet),
+							ed = end.matcher(tmp.snippet);
+					st.find();
+					String trace;
+					if (ed.find(st.start())) {
+						int ndx;
+						do {
+							ndx = ed.end();
+						} while (ed.find(ndx));
+						trace = tmp.snippet.substring(st.start(), ndx);
+					} else
+						trace = tmp.snippet.substring(st.start());
+					result.add(new TestData(tmp.link, title[title.length - 1], trace));
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		try (BufferedWriter bw = Files.newBufferedWriter(Paths.get("./train_attempt_2c.json"))) {
+			bw.write(gson.toJson(result));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
