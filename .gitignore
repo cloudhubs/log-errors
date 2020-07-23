@@ -33,6 +33,7 @@ build/
 ### Python ###
 venv/*
 scraper/venv/*
+machine_learning/venv/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
