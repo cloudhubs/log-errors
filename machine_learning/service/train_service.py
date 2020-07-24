@@ -3,11 +3,12 @@ import pickle
 
 from gensim.models import Doc2Vec
 
-from d2v.training import create_data, train_d2v
+from d2v.training import create_data, train_d2v, create_d2v
 from naive_bayes.bayes_trainer import train_bayes
 
 TITLE_FILE: str = "titles"
 TRACE_FILE: str = "traces"
+MIX: str = "titles_traces"
 
 
 def train_d2v_service(filenames: list):
@@ -23,21 +24,8 @@ def train_d2v_service(filenames: list):
         with open(filename, "r") as input_file:
             create_data(TITLE_FILE, TRACE_FILE, json.loads(input_file.read()))
     print("Parsing complete")
-
-    # Train on titles
-    print("Make titles")
-    model_title = train_d2v(TITLE_FILE)
-    print("Saving titles")
-    model_title.save("./title_dictionary.d2v")
-    model_title = None
-
-    # Train on traces
-    print("Make traces")
-    model_trace = train_d2v(TRACE_FILE)
-    print("Saving traces")
-    model_trace.save("./trace_dictionary.d2v")
-    model_trace = None
-
+    create_d2v(TITLE_FILE, "./title_dictionary.d2v")
+    create_d2v(TRACE_FILE, "./trace_dictionary.d2v")
     return "Training complete"
 
 
@@ -58,18 +46,18 @@ def convert_to_d2v_service(filenames: list):
 
     # Get dictionaries
     print("Get dictionaries")
-    d2v_title = Doc2Vec.load("../api/title_dictionary.d2v")
-    d2v_title.delete_temporary_training_data(keep_doctags_vectors=True, keep_inference=True)
-    d2v_trace = Doc2Vec.load("../api/title_dictionary.d2v")
-    d2v_trace.delete_temporary_training_data(keep_doctags_vectors=True, keep_inference=True)
+    title_d2v = Doc2Vec.load("../api/title_dictionary.d2v")
+    title_d2v.delete_temporary_training_data(keep_doctags_vectors=True, keep_inference=True)
+    trace_d2v = Doc2Vec.load("../api/trace_dictionary.d2v")
+    trace_d2v.delete_temporary_training_data(keep_doctags_vectors=True, keep_inference=True)
 
     # Convert data
     print("Convert data")
     for i in range(len(titles)):
         if i % 1000 == 0:
             print(i)
-        titles[i] = d2v_title.infer_vector(titles[i].split(" "))
-        traces[i] = d2v_trace.infer_vector(traces[i].split(" "))
+        titles[i] = title_d2v.infer_vector(titles[i].split(" "))
+        traces[i] = trace_d2v.infer_vector(traces[i].split(" "))
 
     # Write to disk
     print("Saving results")

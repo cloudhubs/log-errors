@@ -3,20 +3,29 @@ from copy import copy, deepcopy
 from gensim.models.doc2vec import TaggedLineDocument
 from gensim.models import Doc2Vec
 
-from random import shuffle
-
-from util.FileCorpus import FileCorpus
-from util.matcher_util import create_entry_objects
+from util.matcher_util import create_entry_objects, create_dictionary_train_data
 
 
-def create_data(title_file: str, trace_file: str, input_data: list):
-    entries: list = create_entry_objects(input_data)
-    with open(title_file, "a") as titles, open(trace_file, "a") as traces:
-        for entry in entries:
-            titles.write(entry.title)
-            traces.write(entry.trace)
-    entries.clear()
+def create_data(titles: str, traces: str, input_data: list):
+    with open(titles, "a") as title_file, open(traces, "a") as trace_file:
+        title_file.write(input_data[0].get("title"))
+        trace_file.write(input_data[0].get("trace"))
+        for i in range(1, len(input_data)):
+            # Write title
+            title_file.write("\n")
+            title_file.write(input_data[i].get("title"))
+
+            # Write trace
+            trace_file.write("\n")
+            trace_file.write(input_data[i].get("trace"))
     input_data.clear()
+
+
+def create_d2v(filename: str, result_name: str):
+    print("Make " + result_name)
+    model = train_d2v(filename)
+    print("Saving " + result_name)
+    model.save(result_name)
 
 
 def train_d2v(data_file: str):
@@ -25,5 +34,5 @@ def train_d2v(data_file: str):
     print("Build vocab")
     model.build_vocab(documents=tagged)
     print("Training model")
-    model.train(documents=tagged, total_examples=model.corpus_count, epochs=10)
+    model.train(documents=tagged, total_examples=model.corpus_count, epochs=model.iter)
     return model
