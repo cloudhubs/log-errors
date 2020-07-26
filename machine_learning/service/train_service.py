@@ -1,29 +1,30 @@
 import json
 import pickle
+import re
 
 from gensim.models import Doc2Vec
+from gensim.parsing import PorterStemmer
 
-from d2v.training import create_data, train_d2v, create_d2v
-from naive_bayes.bayes_trainer import train_bayes
+from d2v.training import create_d2v
+from util.matcher_util import create_raw_from_files
 
-TITLE_FILE: str = "titles"
-TRACE_FILE: str = "traces"
-MIX: str = "titles_traces"
+TITLE_FILE: str = "titles_d2v"
+TRACE_FILE: str = "traces_d2v"
+MIX: str = "titles_traces_d2v"
 
 
 def train_d2v_service(filenames: list):
-    # Clear data files; jank, but simple and effective
-    tmpFile = open(TITLE_FILE, "w")
-    tmpFile.close()
-    tmpFile = open(TRACE_FILE, "w")
-    tmpFile.close()
-
     # Transform data
-    for filename in filenames:
-        print("Handle file " + filename)
-        with open(filename, "r") as input_file:
-            create_data(TITLE_FILE, TRACE_FILE, json.loads(input_file.read()))
+    print("Transform data")
+#    create_raw_from_files(filenames, TITLE_FILE, TRACE_FILE)
+    titles, traces = pre_process_json(filenames)
+
+    # Write data
+    write_line_sentence_format(TITLE_FILE, titles)
+    write_line_sentence_format(TRACE_FILE, traces)
     print("Parsing complete")
+
+    # Train d2vs
     create_d2v(TITLE_FILE, "./title_dictionary.d2v")
     create_d2v(TRACE_FILE, "./trace_dictionary.d2v")
     return "Training complete"
@@ -31,18 +32,7 @@ def train_d2v_service(filenames: list):
 
 def convert_to_d2v_service(filenames: list):
     # Format data
-    print("Read files")
-    titles: list = []
-    traces: list = []
-    for filename in filenames:
-        print("Handle file " + filename)
-        with open(filename, "r") as file:
-            tmp: list = json.load(file)
-            for element in tmp:
-                titles.append(element["title"])
-                traces.append(element["trace"])
-            print(titles[len(titles) - 1])
-            print(traces[len(traces) - 1])
+    titles, traces = pre_process_json(filenames)
 
     # Get dictionaries
     print("Get dictionaries")
@@ -67,3 +57,46 @@ def convert_to_d2v_service(filenames: list):
         pickle.dump(traces, file)
 
     return "Parsing complete"
+
+
+def pre_process_json(filenames: list):
+    # Format data
+    print("Read files")
+    titles: list = []
+    traces: list = []
+    for filename in filenames:
+        print("Handle file " + filename)
+        with open(filename, "r") as file:
+            tmp: list = json.load(file)
+            for element in tmp:
+                titles.append(pre_process_d2v(element["title"]))
+                traces.append(pre_process_d2v(element["trace"]))
+    return titles, traces
+
+
+bad_chars = re.compile(r"[^a-z0-9]")
+porter = PorterStemmer()
+
+
+def pre_process_d2v(line: str):
+    # Scrap bad characters
+    tokens = bad_chars.sub(" ", line.lower()).split(" ")
+    i: int = 0
+
+    # Remove all empty strings (where there were multiple spaces)
+    while i < len(tokens):
+        if len(tokens[i]) <= 0:
+            del tokens[i]
+        else:
+            i += 1
+
+    # Use porter stemmer
+    return " ".join([porter.stem(word) for word in tokens])
+
+
+def write_line_sentence_format(out_filename: str, elements: list):
+    with open(out_filename, "w") as out_file:
+        out_file.write(elements[0])
+        for i in range(1, len(elements)):
+            out_file.write("\n")
+            out_file.write(elements[i])
