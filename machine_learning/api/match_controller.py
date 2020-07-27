@@ -4,9 +4,6 @@ import json
 from flask import Flask, jsonify, request, Response, Blueprint
 from flask_cors import cross_origin, CORS
 
-from d2v.training import create_data, train_d2v
-from naive_bayes.bayes_trainer import train_bayes
-
 match_controller = Blueprint('match_controller', __name__, template_folder='templates')
 
 

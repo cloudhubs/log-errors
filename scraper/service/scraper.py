@@ -160,7 +160,7 @@ class StackOversight(object):
                         'tags': site.get_tags(response)}
 
                 print(data)
-                response = MongoClient().testdb.coll_name.insert_one(data)
+                response = MongoClient(connect=False).testdb.coll_name.insert_one(data)
 
             print(threading.get_ident(), " child")
             used_children.put(threading.current_thread())
