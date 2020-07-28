@@ -27,10 +27,10 @@ public class LogErrorParser {
     static Pattern tracebackExitPattern = Pattern.compile(ENTRY_REGEX);
     static Pattern tracebackEntryPattern = Pattern.compile(TRACEBACK_REGEX);
     static Pattern nestedEntryPattern = Pattern.compile(NESTED_REGEX);
+
     private static int lineNum;
     static List<FileStructure> commonClassStructure;
     static List<String> commonExternalSources;
-    private static List<LogError> errors;
     private static String pathToDir;
     /**
      * Tokenizes the log file.
@@ -40,24 +40,19 @@ public class LogErrorParser {
      */
     public static List<LogError> parseLog(ResolveErrorsRequest inputObject) throws FileNotFoundException {
 
-        //commonClassStructure = ProjectStructureParser.getClassStructure(
-        //        "C:\\Users\\Elizabeth\\Documents\\Elizabeth\\Baylor_Summer_2020\\Team_C_GIT\\log-errors\\scraper");
         pathToDir = inputObject.getPathToSourceCodeDirectory();
-
         commonClassStructure = ProjectStructureParser.getClassStructure(pathToDir);
         commonExternalSources = ProjectStructureParser.getRequirements(pathToDir);
 
         PeekableScanner scan = new PeekableScanner(new File(inputObject.getPathToLogFile()));
-        errors = new ArrayList<>();
-        String nextLine;
-        lineNum = 0;
+        List<LogError> errors = new ArrayList<>();
 
+        lineNum = 0;
         while (scan.hasNextLine()) {
             lineNum++;
 
             // There are 3 types of lines. Entries, tracebacks and nested notifiers. Check for each and react accordingly
             if (errorEntryPattern.matcher(scan.peekLine()).matches()) {
-
                 /** line is considered the beginning of an error. **/
                 log.info("Found Entry: " + lineNum);
                 errors.add(parseLine(scan.nextLine(), lineNum, inputObject.getPathToLogFile()));
@@ -75,7 +70,6 @@ public class LogErrorParser {
                     deepest.setErrorCharWeight(AssignWeight.assignWeight(deepest));
                 }
             } else if (nestedEntryPattern.matcher(scan.peekLine()).matches()) {
-
                 /** line is the beginning of a nested segment. **/
                 log.info("Nested exception located for error");
                 scan.nextLine();
@@ -88,15 +82,15 @@ public class LogErrorParser {
                 List<String> srcCode = getSourceCodeLine(deepestNested);
                 deepestNested.setSourceCodeLine(srcCode.get(0));
                 deepestNested.setSourceCodeFile(srcCode.get(1));
+                deepestNested.setLineNumber(lineNum+1);
                 deepestNested.setErrorCharWeight(AssignWeight.assignWeight(deepestNested));
                 deepest.setNestedError(deepestNested);
 
             } else {
-                // line is not important and can be skipped
+                //line is not important and can be skipped
                 scan.nextLine();
             }
         }
-        //addSourceCodeLines(inputObject.getPathToSourceCodeDirectory());
         return errors;
     }
 
@@ -125,23 +119,9 @@ public class LogErrorParser {
         //Includes error source code location
         currentError.setErrorMessage(parse[1] + "- " + parse[2]);
 
-
-        //etc....
-
         return currentError;
     }
 
-    /**
-     * addNested: begins the parsing for the nested errors. Calls {@inheritDoc addTraceback}
-     *
-     * @param errLog the scanner representation of the file
-     * @return the parsed string that is the traceback array
-     */
-    private static List<String> addNested(PeekableScanner errLog) {
-        String line = errLog.nextLine();
-        lineNum++;
-        return addTraceback(errLog);
-    }
 
     /**
      * addNested: begins the parsing for the nested errors. Calls {@inheritDoc addTraceback}
@@ -220,9 +200,6 @@ public class LogErrorParser {
 
         return returnStr;
     }
-
-
-
 
 
 }

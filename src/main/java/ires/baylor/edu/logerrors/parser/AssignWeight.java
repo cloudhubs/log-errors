@@ -9,7 +9,6 @@ import java.util.List;
 
 public class AssignWeight {
     public static final float ORIGINAL_WEIGHT = 1.0f;
-    public static final float THIRD = 0.75f;
     public static final float SECOND = 0.5f;
     public static final float PRIMARY = 0.25f;
     private static Float [] floatArray;
@@ -72,11 +71,6 @@ public class AssignWeight {
                     }
 
                 }
-
-                /*if(currentImport != null) {
-                    modifyWeights(SECOND, THIRD, currentImport);
-                }*/
-
             }
         }
 

@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Weight Controller. This controller will assign fill out the errorCharWeight list
+ * in the LogError object. This is now automatically done through the LogController
+ */
 @Slf4j
 @RestController
 public class WeightController {
 
     @GetMapping("/weight")
     public ResponseEntity<?> resolveErrors(@RequestBody LogError error) {
-
         log.info("Request: " + error);
-
         List<Float> results = AssignWeight.assignWeight(error);
 
         if (results.isEmpty()) {
             return new ResponseEntity<>(results, HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity<>(results, HttpStatus.ACCEPTED);
-
     }
 
 }

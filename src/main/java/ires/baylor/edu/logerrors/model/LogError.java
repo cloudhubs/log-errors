@@ -1,5 +1,6 @@
 package ires.baylor.edu.logerrors.model;
 
+import ires.baylor.edu.logerrors.unusedCode.ExternalLink;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -38,8 +39,6 @@ public class LogError {
     public LogError(List<String> traceBacks){
         this.traceBacks = traceBacks;
     }
-
-
 
 
 

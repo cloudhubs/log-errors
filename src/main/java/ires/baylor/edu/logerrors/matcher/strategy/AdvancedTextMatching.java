@@ -15,7 +15,10 @@ public class AdvancedTextMatching extends MatcherAlgorithm{
     final static String VAR_REPLACEMENT = "VAR_VAL";
     static Pattern VARIABLE_DETECTION = Pattern.compile(VAR_REGEX);
 
-
+    /**
+     * Advanced substring matching using title, text and code found from StackOverflow and
+     * the scraped data from the database
+     */
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
         if(SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {

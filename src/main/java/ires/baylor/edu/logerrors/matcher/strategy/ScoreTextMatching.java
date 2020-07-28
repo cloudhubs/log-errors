@@ -14,7 +14,10 @@ public class ScoreTextMatching extends MatcherAlgorithm {
     final static String VAR_REPLACEMENT = "VAR_VAL";
     static Pattern VARIABLE_DETECTION = Pattern.compile(VAR_REGEX);
 
-
+    /**
+     * Uses a score based system to return the 10 most similar scraped data objects based
+     * on the title, text and code of the scraped object.
+     */
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
         if(SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {

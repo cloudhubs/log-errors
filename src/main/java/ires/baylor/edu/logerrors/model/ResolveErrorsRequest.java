@@ -10,5 +10,4 @@ import lombok.*;
 public class ResolveErrorsRequest {
     String pathToLogFile; // path single log file
     String pathToSourceCodeDirectory; // path to source code directory
-    //String pathToLogDirectory; // directory path containing multiple log files
 }

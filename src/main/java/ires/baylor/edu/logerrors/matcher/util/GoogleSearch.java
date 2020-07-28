@@ -14,7 +14,6 @@ import java.util.ArrayList;
 public class GoogleSearch {
 
     public static ArrayList<ArrayList<String>> search(String error) throws GeneralSecurityException, IOException {
-//    public static void main(String[] args) throws GeneralSecurityException, IOException {
 
         String searchQuery = error; //The query to search
         String cx = System.getenv().get("cx"); //Your search engine

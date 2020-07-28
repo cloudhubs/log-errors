@@ -1,4 +1,4 @@
-package ires.baylor.edu.logerrors.matcher;
+package ires.baylor.edu.logerrors.unusedCode;
 
 import ires.baylor.edu.logerrors.model.LogError;
 import lombok.*;

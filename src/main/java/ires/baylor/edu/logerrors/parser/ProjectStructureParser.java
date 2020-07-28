@@ -19,7 +19,7 @@ public class ProjectStructureParser {
         if(current != null) {
             File folder = new File(current);
             try {
-                recursiveFunc(folder);
+                getClassStructure(folder);
                 fs.forEach(t -> t.removeDuplicates());
             } catch (FileNotFoundException e) {
                 log.info("Unable to parce file structure given");
@@ -29,7 +29,7 @@ public class ProjectStructureParser {
     }
 
 
-    private static void recursiveFunc(File current) throws FileNotFoundException {
+    private static void getClassStructure(File current) throws FileNotFoundException {
 
         File[] listOfFiles = current.listFiles();
         for (File f : listOfFiles) {
@@ -45,8 +45,6 @@ public class ProjectStructureParser {
                         currentLine = scan.nextLine();
 
                         if (currentLine.matches("^from .* import .*") || currentLine.matches("^import .*")) {
-                            // currentLine = currentLine.replaceFirst("^from ", "").replaceFirst("import ",
-                            // "");
                             temp.addImports(currentLine);
 
                         } else if (currentLine.matches(" *class .*: *")) {
@@ -72,7 +70,7 @@ public class ProjectStructureParser {
                     fs.add(temp);
                 }
             } else if (f.isDirectory()) {
-                recursiveFunc(f);
+                getClassStructure(f);
             }
         }
 

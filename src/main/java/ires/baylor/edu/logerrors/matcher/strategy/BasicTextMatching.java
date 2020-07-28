@@ -12,10 +12,6 @@ import java.util.List;
 public class BasicTextMatching extends MatcherAlgorithm {
     /**
      * Basic substring matching using text found from SO and data from the MongoDB
-     *
-     * @param SOFromDB
-     * @param logToMatch
-     * @return
      */
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
