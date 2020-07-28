@@ -3,7 +3,7 @@
 ## To run:
 Do note, this code is a bit scattered; I've been learning Python on-the-fly for this, and thus started with code based off of what I had at hand (the scraper) before graduating to using a Jupyter notebook. Thus, it's kind of contained half-and-half between these two.
 
-The initial test data is gotten by running the flask server and running two commands: first, `train/d2v`, followed by `train/d2v/convert`. From there, use the resulting files as inputs to the Jupyter notebook.
+The initial test data is gotten by running the flask server and running two commands: first, `train/d2v`, followed by `train/d2v/convert`. From there, place the resulting files in the same directory as the Jupyter notebook to be able to run it without issues.
 
 # Starting the flask server:
 Install everything in `requirements.txt`, then run `api/main.py` to get it started.
