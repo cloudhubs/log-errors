@@ -1,0 +1,12 @@
+numpy==1.19.0
+scipy==1.5.1
+scikit-learn==0.23.1
+gensim==3.8.3
+cython==0.29.21
+Flask==1.1.2
+Flask-Cors==3.0.8
+
+# Temp requirements
+pandas==1.0.5
+matplotlib==3.2.2
+seaborn==0.10.1
