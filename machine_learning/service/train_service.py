@@ -5,12 +5,29 @@ import re
 from gensim.models import Doc2Vec
 from gensim.parsing import PorterStemmer
 
-from d2v.training import create_d2v
+from d2v.d2v_train import create_d2v
 from util.matcher_util import create_raw_from_files
 
+# File used for temporary storage of Stack Overflow titles while training Doc2Vec
 TITLE_FILE: str = "titles_d2v"
+# File used for temporary storage of stack traces while training Doc2Vec
 TRACE_FILE: str = "traces_d2v"
+# File used for storing title/stack trace pairs (title + " " + trace) while training Doc2Vec
 MIX: str = "titles_traces_d2v"
+
+# File the Doc2Vec dictionary trained by this program is stored in
+OUR_D2V: str = "mix_dictionary.d2v"
+# File containing a Doc2Vec dictionary sourced from elsewhere
+SOURCED_D2V: str = "doc2vec.bin"
+
+# The initial parameters are pulled from https://github.com/jhlau/doc2vec
+# Starting alpha of the Doc2Vec infer_vector
+ALPHA = 0.01
+# Steps used to compute Doc2Vec's infer_vector
+STEPS = 1000
+
+# The regex used to clean stack traces/Stack Overflow titles
+bad_chars = re.compile(r"[^a-z0-9]")
 
 
 def train_d2v_service(filenames: list):
@@ -19,29 +36,27 @@ def train_d2v_service(filenames: list):
     titles, traces = pre_process_json(filenames)
 
     # Write data
-#    write_line_sentence_format(TITLE_FILE, titles)
-#    write_line_sentence_format(TRACE_FILE, traces)
     write_all_line_sentence_format(MIX, titles, traces)
     print("Parsing complete")
 
     # Train d2vs
-    create_d2v(MIX, "./mix_dictionary.d2v")
+    create_d2v(MIX, OUR_D2V)
     return "Training complete"
 
 
-def convert_to_d2v_service(filenames: list):
+def convert_to_d2v_service(filenames: list, our_dict: bool):
     # Format data
     titles, traces = pre_process_json(filenames)
 
     # Get dictionaries
-    print("Get dictionaries")
-    d2v = Doc2Vec.load("../api/mix_dictionary.d2v")
-    '''
-    title_d2v = Doc2Vec.load("../api/title_dictionary.d2v")
-    title_d2v.delete_temporary_training_data(keep_doctags_vectors=True, keep_inference=True)
-    trace_d2v = Doc2Vec.load("../api/trace_dictionary.d2v")
-    trace_d2v.delete_temporary_training_data(keep_doctags_vectors=True, keep_inference=True)
-    '''
+    print(our_dict)
+    print("Get dictionary")
+    name = "../api/"
+    if our_dict:
+        name += OUR_D2V
+    else:
+        name += SOURCED_D2V
+    d2v = Doc2Vec.load(name)
 
     # Convert data
     print("Convert data")
@@ -50,17 +65,8 @@ def convert_to_d2v_service(filenames: list):
     for i in range(len(titles)):
         if i % 1000 == 0:
             print(i)
-        '''
-        trace = traces[i].split(" ")
-        tmp_title = titles[i].split(" ")
-        tmp_title.extend(trace)
-        result.append(d2v.infer_vector(tmp_title))
-        tmp_title = titles[(i + 10) % len(titles)].split(" ")
-        tmp_title.extend(trace)
-        result_bad.append(d2v.infer_vector(tmp_title))
-        '''
-        titles_vec.append(d2v.infer_vector(titles[i].split(" "), steps=20))
-        traces_vec.append(d2v.infer_vector(traces[i].split(" "), steps=20))
+        titles_vec.append(d2v.infer_vector(titles[i].split(" "), alpha=ALPHA, steps=STEPS))
+        traces_vec.append(d2v.infer_vector(traces[i].split(" "), alpha=ALPHA, steps=STEPS))
 
     # Write to disk
     print("Saving results")
@@ -68,7 +74,6 @@ def convert_to_d2v_service(filenames: list):
         pickle.dump(titles_vec, file)
     with open("./traces_vec.pkl", "wb") as file:
         pickle.dump(traces_vec, file)
-
     return "Parsing complete"
 
 
@@ -82,25 +87,21 @@ def pre_process_json(filenames: list):
         with open(filename, "r") as file:
             tmp: list = json.load(file)
             for element in tmp:
-                titles.append(" ".join(pre_process_d2v(element["title"])))
-                traces.append(" ".join(pre_process_d2v(element["trace"])))
+                titles.append(" ".join(pre_process_line(element["title"])))
+                traces.append(" ".join(pre_process_line(element["trace"])))
     return titles, traces
 
 
-bad_chars = re.compile(r"[^a-z0-9]")
-porter = PorterStemmer()
-
-
-def pre_process_d2v(line: str):
+def pre_process_line(line: str):
     # Scrap bad characters
-    tokens = bad_chars.sub(" ", line.lower()).split(" ")
+    tokens = bad_chars.sub(" ", line.lower()).strip().split(" ")
     i: int = 0
 
     # Remove all empty strings (from multiple spaces)
     tokens = filter(lambda val: len(val) > 0, tokens)
 
     # Apply porter stemmer and return
-    return [porter.stem(word) for word in tokens]
+    return tokens
 
 
 def write_line_sentence_format(out_filename: str, elements: list):

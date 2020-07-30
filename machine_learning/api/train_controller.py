@@ -29,19 +29,7 @@ def train_d2v_endpoint():
 @train_controller.route("/train/d2v/convert", methods=["POST"])
 @cross_origin()
 def convert_to_d2v_endpoint():
-    return convert_to_d2v_service(request.json.get("filenames"))
-
-
-@train_controller.route("/train/tfidf", methods=["POST"])
-@cross_origin()
-def train_tfidf_endpoint():
-    return train_tfidf_service(request.json.get("filenames"))
-
-
-@train_controller.route("/train/tfidf/convert", methods=["POST"])
-@cross_origin()
-def convert_to_tfidf_endpoint():
-    return convert_to_tfidf_service(request.json.get("filenames"))
+    return convert_to_d2v_service(request.json.get("filenames"), request.json.get("our_dict"))
 
 
 @train_controller.route("/train/naive-bayes", methods=["POST"])

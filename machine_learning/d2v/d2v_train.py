@@ -13,11 +13,6 @@ def create_d2v(filename: str, result_name: str):
 
 def train_d2v(data_file: str):
     tagged = TaggedLineDocument(data_file)
-    model = Doc2Vec(tagged, dm=0, vector_size=250, window=8, min_count=1, workers=4, epochs=10)
-    '''
-    print("Build vocab")
-    model.build_vocab(corpus_file=data_file)
-    print("Training model")
-    model.train(documents=tagged, total_examples=model.corpus_count, epochs=model.iter)
-    '''
+    model = Doc2Vec(tagged, vector_size=150, window=8, min_count=1, workers=4, epochs=10)
+    model.train(tagged, total_examples=model.corpus_count, epochs=model.epochs)
     return model
