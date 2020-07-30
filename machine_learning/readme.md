@@ -61,13 +61,14 @@ The data to train on should be a object like as follows:
 
 ```json
 {
-        "filenames": [ "Paths to the files containing data to convert", "There can be more than one file" ]
+        "filenames": [ "Paths to the files containing data to convert", "There can be more than one file" ],
+        "our_dict": true/false
 }
 ```
 
-The format of the data to convert is identical to the format for the training
+The format of the data to convert is identical to the format for the training. `our_dict` specifies whether to use the dictionary created by the endpoint (by a call to `train/d2v`), or a generic preloaded dictionary. This can be omitted, in which case it defaults to using the generic dictionary. Currently, both must be stored in the `api` directory.
 
 ### Success Response
 **Code**: `200 OK`
 
-Creates files `titles_vec.pkl` and `traces_vec.pkl` in the directory the program was run from (usually the API directory)
+Creates files `titles_vec.pkl` and `traces_vec.pkl` in the directory the program was run from (usually the `api` directory)
