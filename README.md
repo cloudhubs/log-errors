@@ -1,7 +1,7 @@
 # Welcome to Log-Errors
 
 ## This Repository contains a multitude of sub projects. 
-1. Log Scraper - tokenizes log files of the format in [here](https://github.com/cloudhubs/logscraper/tree/master/logs/from_prod_anonymized) 
+1. Log Parser - tokenizes log files of the format in [here](https://github.com/cloudhubs/logscraper/tree/master/logs/from_prod_anonymized) 
 
 2. StackOverflow Scraper - an api that generates a database of posts from stack overflow
 
@@ -42,28 +42,28 @@ $ python3 main.py
 
 # Log Parser API
 **Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
-- [Parse File](README-matcher.md): `POST /errors/`
+- [Parse File](matcher/README.md): `POST /errors/`
 
 
 
 # StackOverflow Scraper API
 **The mongo and scraper apis are run simultaneusly. Start them from [this file](/scraper/api/main.py)**
-- [Start Scraper](README-scraper.md)  `POST /scrape/{language}`
-- [Scrape Meta-data](README-scraper.md) `POST /scrape-meta/{language}`
-- [Stop Scraper](README-scraper.md) `POST /scrape/stop`
+- [Start Scraper](scraper/README.md)  `POST /scrape/{language}`
+- [Scrape Meta-data](scraper/README.md) `POST /scrape-meta/{language}`
+- [Stop Scraper](scraper/README.md) `POST /scrape/stop`
 
 # MongoDB API
 **The mongo and scraper apis are run simultaneusly. Start them from [this file](/scraper/api/main.py)**
-- [Home](README-scraper.md) `GET /mongo`
-- [Find All](README-scraper.md) `GET /mongo/test`
-- [Add](README-scraper.md) `POST /mongo/test`
-- [Empty](README-scraper.md) `DELETE /mongo/test`
+- [Home](scraper/README.md) `GET /mongo`
+- [Find All](scraper/README.md) `GET /mongo/test`
+- [Add](scraper/README.md) `POST /mongo/test`
+- [Empty](scraper/README.md) `DELETE /mongo/test`
 
 
 # Mongo Matcher
 **Start the parser [here](src/main/java/ires/baylor/edu/logerrors/LogErrorsApplication.java)**
 
--[Find Matches](README-matcher.md) `GET /matcher`
+-[Find Matches](matcher/README.md) `GET /matcher`
 
 
 
