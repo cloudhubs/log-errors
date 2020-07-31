@@ -14,6 +14,16 @@ public class BasicTextMatchingTest extends MatcherAlgorithmTest {
     }
 
     @Test
+    public void realTest() {
+        List<ScraperObject> returnList = matcher.match(Results, RealError);
+        System.out.println("Basic Alg");
+        for(ScraperObject obj: returnList) {
+            System.out.println(obj.getTitle());
+        }
+        assert true;
+    }
+
+    @Test
     public void basicTest() {
         List<ScraperObject> returnList = matcher.match(scraperObj, error1);
         assert returnList.size() == 1;

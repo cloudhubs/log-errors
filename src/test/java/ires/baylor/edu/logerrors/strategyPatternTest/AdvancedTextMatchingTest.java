@@ -15,6 +15,18 @@ public class AdvancedTextMatchingTest extends MatcherAlgorithmTest {
     public static void init() {
         matcher = new AdvancedTextMatching();
     }
+
+    @Test
+    public void realTest() {
+        List<ScraperObject> returnList = matcher.match(Results, RealError);
+        System.out.println("Advanced Alg");
+        for(ScraperObject obj: returnList) {
+            System.out.println(obj.getTitle());
+        }
+        assert true;
+    }
+
+
     @Test
     public void basicTest() {
         List<ScraperObject> returnList = matcher.match(scraperObj, error1);

@@ -13,12 +13,22 @@ public class ScoreTextMatchingTest extends MatcherAlgorithmTest {
     public static void init() {
         matcher = new ScoreTextMatching();
     }
+
     @Test
-    public void basicTest() {
-        List<ScraperObject> returnList = matcher.match(scraperObj, error1);
+    public void realTest() {
+        List<ScraperObject> returnList = matcher.match(Results, RealError);
+        System.out.println("Score Alg");
         for(ScraperObject obj: returnList) {
             System.out.println(obj.getTitle());
         }
+        assert true;
+    }
+
+
+    @Test
+    public void basicTest() {
+        List<ScraperObject> returnList = matcher.match(scraperObj, error1);
+
         assert returnList.size() == 2;
 
         assert returnList.get(0).getTitle().equals("How does python unit testing work?");

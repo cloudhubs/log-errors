@@ -102,7 +102,8 @@ public class SubWeight extends MatcherAlgorithm {
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
         List<ScraperObject> matched = new ArrayList<>();
 
-        this.regex = setRegex(logToMatch.getSourceCodeLine());
+        if(logToMatch.getSourceCodeLine() != null)
+            this.regex = setRegex(logToMatch.getSourceCodeLine());
 
         String cached_id = RegexCache.check(this.regex);
         if(RegexCache.check(this.regex) != ""){

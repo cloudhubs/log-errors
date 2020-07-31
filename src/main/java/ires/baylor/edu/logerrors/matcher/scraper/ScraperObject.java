@@ -30,10 +30,11 @@ public class ScraperObject {
         this.text = text;
         this.code = code;
     }
-    public ScraperObject(String title, List<String> code) {
+    public ScraperObject(String title, List<String> text) {
         this.title = title;
-        this.code = code;
+        this.text = text;
     }
+
 
 
     public ScraperObject(Document doc) {
@@ -43,6 +44,8 @@ public class ScraperObject {
         this.text = doc.getList("text", String.class);
         this.tags = doc.getList("tags", String.class);
     }
+
+
 
     @Override
     public boolean equals(Object o) {

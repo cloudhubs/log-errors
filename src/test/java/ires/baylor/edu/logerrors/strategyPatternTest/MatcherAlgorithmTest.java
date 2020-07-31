@@ -13,7 +13,14 @@ import java.util.List;
 @SpringBootTest
 public abstract class MatcherAlgorithmTest {
     public static MatcherAlgorithm matcher;
-
+    String fillerString = "We need a really long filler string here - putting it before and after the acutal text \n" +
+            "This is because Fuzzy matching breaks down after a little while, especially with a lot of test\t" +
+            "the plan is to create an applicable matching environment";
+    String str1 = "Error Message: AttributeError: 'NoneType' object has no attribute 'split'";
+    String str2 = "Message Error: AttributeError: 'NoneType' object has no attribute 'split'";
+    String str3 = "Error Message: AttributeError: 'System' object has no attribute 'split'";
+    String str4 = "Error Message: AttributeError: 'NoneType' has no attribute 'split'";
+    String str5 = "";
 
     List<ScraperObject> scraperObj = new ArrayList<>() {{
         add(new ScraperObject("How does python unit testing work?",new ArrayList<>(){{add("Text test to see what matches");}}, new ArrayList<>(){{add("");}}));
@@ -39,6 +46,16 @@ public abstract class MatcherAlgorithmTest {
     LogError error2 = new LogError("Python testing");
     LogError errorSyntax = new LogError("\"Python unit testing:\"\" How does it work?\"");
     LogError errorNull = new LogError();
+
+    LogError RealError = new LogError("Error Message: AttributeError: 'NoneType' object has no attribute 'split'", "Not Important");
+
+    List<ScraperObject> Results = new ArrayList<>() {{
+        add(new ScraperObject("1", new ArrayList<>(){{add(fillerString + str1 + fillerString);add(fillerString);}}));
+        add(new ScraperObject("2", new ArrayList<>(){{add(fillerString + str2 + fillerString);add(fillerString);}}));
+        add(new ScraperObject("3", new ArrayList<>(){{add(fillerString + str3 + fillerString);add(fillerString);}}));
+        add(new ScraperObject("4", new ArrayList<>(){{add(fillerString + str4 + fillerString);add(fillerString);}}));
+        add(new ScraperObject("5", new ArrayList<>(){{add(fillerString + str5 + fillerString);add(fillerString);}}));
+    }};
 
     @Test
     void nullTest1() {

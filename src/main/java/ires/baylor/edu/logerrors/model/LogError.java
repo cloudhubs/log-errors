@@ -39,8 +39,10 @@ public class LogError {
         this.traceBacks = traceBacks;
     }
 
-
-
+    public LogError(String errorMessage, String SourceCodeLine) {
+        this.errorMessage = errorMessage;
+        this.sourceCodeLine = SourceCodeLine;
+    }
 
 
     public FileStructure getCurrentFile(String filename) {
