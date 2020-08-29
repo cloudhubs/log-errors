@@ -102,19 +102,23 @@ public class SubWeight extends MatcherAlgorithm {
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
         List<ScraperObject> matched = new ArrayList<>();
 
+        // If the length of the weights that were passed in with the constructor is different from the source code length
+        if (logToMatch.getSourceCodeLine().length() != this.weights.size()) {
+            throw new IllegalArgumentException("The length of the weight and the length of the source code(logToMatch.getSourceCodeLine()) do not match");
+        }
+
+        // Build the regex based on the weights and source code
         if(logToMatch.getSourceCodeLine() != null)
             this.regex = setRegex(logToMatch.getSourceCodeLine());
 
+        // speed up the process by adding a cache, if a regex is requested twice it will be found immidately.
         String cached_id = RegexCache.check(this.regex);
         if(RegexCache.check(this.regex) != ""){
             return (List<ScraperObject>) RegexCache.get(cached_id).get("so_post");
         }
 
+        //check each db entry for the source code line with the regex.
         for (ScraperObject dbEntry : SOFromDB) {
-
-            if (logToMatch.getErrorMessage().length() != this.weights.size()) {
-                throw new IllegalArgumentException("The length of the weight and the length of the message(logError.getErrorMessage()) do not match");
-            }
 
             //check entries against threshold
             if (PERCENT_MATCH <= matchListAgainst(dbEntry.getCode(), logToMatch.getSourceCodeLine())) {
