@@ -19,10 +19,24 @@ public class BasicTextMatchingTest extends MatcherAlgorithmTest {
         System.out.println("Basic Alg");
         for(ScraperObject obj: returnList) {
             System.out.println(obj.getTitle());
+            if(obj.getTitle().isEmpty()) {
+                System.out.println("last string empty..");
+            }
         }
         assert true;
     }
-
+    @Test
+    public void realTest2() {
+        List<ScraperObject> returnList = matcher.match(TitleResults, RealError);
+        System.out.println("Basic Alg");
+        for(ScraperObject obj: returnList) {
+            System.out.println(obj.getTitle());
+            if(obj.getTitle().isEmpty()) {
+                System.out.println("last string empty..");
+            }
+        }
+        assert true;
+    }
     @Test
     public void basicTest() {
         List<ScraperObject> returnList = matcher.match(scraperObj, error1);

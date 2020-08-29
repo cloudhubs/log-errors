@@ -16,9 +16,10 @@ public abstract class MatcherAlgorithmTest {
     String fillerString = "We need a really long filler string here - putting it before and after the acutal text \n" +
             "This is because Fuzzy matching breaks down after a little while, especially with a lot of test\t" +
             "the plan is to create an applicable matching environment";
-    String str1 = "Error Message: AttributeError: 'NoneType' object has no attribute 'split'";
-    String str2 = "Message Error: AttributeError: 'NoneType' object has no attribute 'split'";
-    String str3 = "Error Message: AttributeError: 'System' object has no attribute 'split'";
+    //String str3 = "Error Message: AttributeError: 'NoneType' object has no attribute 'split'";
+    String str3 = "no";
+    String str1 = "Message Error: AttributeError: 'NoneType' object has no attribute 'split'";
+    String str2 = "Error Message: AttributeError: 'System' object has no attribute 'split'";
     String str4 = "Error Message: AttributeError: 'NoneType' has no attribute 'split'";
     String str5 = "";
 
@@ -56,7 +57,13 @@ public abstract class MatcherAlgorithmTest {
         add(new ScraperObject("4", new ArrayList<>(){{add(fillerString + str4 + fillerString);add(fillerString);}}));
         add(new ScraperObject("5", new ArrayList<>(){{add(fillerString + str5 + fillerString);add(fillerString);}}));
     }};
-
+    List<ScraperObject> TitleResults = new ArrayList<>() {{
+        add(new ScraperObject(str1));
+        add(new ScraperObject(str2));
+        add(new ScraperObject(str3));
+        add(new ScraperObject(str4));
+        add(new ScraperObject(str5));
+    }};
     @Test
     void nullTest1() {
         try {

@@ -59,4 +59,14 @@ public class WeightTextMatchingTest extends MatcherAlgorithmTest {
         }
         assert true;
     }
+
+    @Test
+    public void realTest2() {
+        List<ScraperObject> returnList = matcher.match(TitleResults, RealError);
+        System.out.println("Weight Alg");
+        for(ScraperObject obj: returnList) {
+            System.out.println(obj.getTitle());
+        }
+        assert true;
+    }
 }

@@ -45,6 +45,9 @@ public class ScraperObject {
         this.tags = doc.getList("tags", String.class);
     }
 
+    public ScraperObject(String title) {
+        this.title = title;
+    }
 
 
     @Override
