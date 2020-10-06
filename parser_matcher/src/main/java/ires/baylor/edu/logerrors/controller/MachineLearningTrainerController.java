@@ -15,27 +15,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.bson.Document;
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
+import ires.baylor.edu.logerrors.matcher.stackoverflow.StackOverflowScraperMatcher;
+import ires.baylor.edu.logerrors.matcher.util.mongoConnector;
+import ires.baylor.edu.logerrors.unusedCode.MatcherControllerParameters;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.tools.sjavac.Log;
 
-import ires.baylor.edu.logerrors.matcher.MatcherControllerParameters;
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
-import ires.baylor.edu.logerrors.matcher.StackOverflowScraperMatcher;
-import ires.baylor.edu.logerrors.matcher.mongoConnector;
-import ires.baylor.edu.logerrors.matcher.strategyPattern.MachineLearningMatcher;
+
 import ires.baylor.edu.logerrors.model.LogError;
-import ires.baylor.edu.logerrors.model.ResolveErrorsRequest;
-import ires.baylor.edu.logerrors.parser.LogErrorParser;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

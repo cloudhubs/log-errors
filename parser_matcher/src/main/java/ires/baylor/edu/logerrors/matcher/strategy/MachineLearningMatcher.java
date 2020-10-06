@@ -1,4 +1,4 @@
-package ires.baylor.edu.logerrors.matcher.strategyPattern;
+package ires.baylor.edu.logerrors.matcher.strategy;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,15 +19,14 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ires.baylor.edu.logerrors.matcher.ScraperObject;
 import ires.baylor.edu.logerrors.model.LogError;
 import lombok.Cleanup;
-import lombok.var;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Micah
  */
 @Slf4j
-public class MachineLearningMatcher implements MatcherAlgorithm {
+public class MachineLearningMatcher extends MatcherAlgorithm {
 
 	private static final String TMP_REGEX = "[0-9]{4}(?:-[0-9]{2}){2} (?:[0-9]{2}:){2}[0-9]{2},[0-9]*? ((?:WARNING)|(?:ERROR)) - (.*?\\.py:[0-9]*?) - (.*)";
 	private static final Pattern MATCHER = Pattern.compile(TMP_REGEX);
