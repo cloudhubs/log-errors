@@ -19,12 +19,11 @@ import java.io.FileNotFoundException;
 @RestController
 public class LogController {
     @PostMapping("/errors")
-    public ResponseEntity<?> resolveErrors(@RequestBody ResolveErrorsRequest request)  {
+    public ResponseEntity<?> resolveErrors(@RequestBody ResolveErrorsRequest request) {
         log.info("Request: " + request);
         try {
             return new ResponseEntity<>(LogErrorParser.parseLog(request), HttpStatus.ACCEPTED);
-        }
-        catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             return new ResponseEntity<>(e.getStackTrace(), HttpStatus.NO_CONTENT);
         }
     }

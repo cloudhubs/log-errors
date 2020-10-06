@@ -25,18 +25,18 @@ import java.util.List;
 public class LogMatcherController {
 
     @GetMapping("/matcher")
-    public ResponseEntity<?> resolveErrors(@RequestBody LogError request)  {
+    public ResponseEntity<?> resolveErrors(@RequestBody LogError request) {
 
         log.info("Request: " + request);
         try {
             List<ScraperObject> results = StackOverflowScraperMatcher.matchLog(request);
-            if (results.isEmpty()){
+            if (results.isEmpty()) {
                 return new ResponseEntity<>(results, HttpStatus.NOT_FOUND);
             }
 
             return new ResponseEntity<>(results, HttpStatus.ACCEPTED);
 
-        } catch(GeneralSecurityException | IOException e){
+        } catch (GeneralSecurityException | IOException e) {
             return new ResponseEntity<>(e.getStackTrace(), HttpStatus.NO_CONTENT);
         }
     }

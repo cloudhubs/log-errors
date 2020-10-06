@@ -2,20 +2,23 @@ package ires.baylor.edu.logerrors.matcher.scraper;
 
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ScraperConnector {
 
-    public static void main(String [] args) throws IOException {
+    private final static String _mongo_url = "http://localhost:5000/mongo/test/url";
+
+    public static void main(String[] args) throws IOException {
         System.out.println(ScraperConnector.scrapeAndAdd("http://stackoverflow.com/questions/21404252/post-request-send-json-data-java-httpurlconnection"));
     }
 
-    private final static String _mongo_url = "http://localhost:5000/mongo/test/url";
-
     public static String scrapeAndAdd(String new_url) throws IOException {
-            return ScraperConnector.executePOST(new_url);
+        return ScraperConnector.executePOST(new_url);
     }
 
     private static String executePOST(String new_url) throws IOException {

@@ -31,15 +31,13 @@ public class LogError {
     List<ExternalLink> gitHub;
 
 
-
     public LogError(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 
-    public LogError(List<String> traceBacks){
+    public LogError(List<String> traceBacks) {
         this.traceBacks = traceBacks;
     }
-
 
 
     public FileStructure getCurrentFile(String filename) {
@@ -57,14 +55,14 @@ public class LogError {
         List<String> str = new ArrayList<>();
         importLine = importLine.replaceAll("from ", "").replaceAll("import ", "");
 
-        if(importLine.matches(".*as.*")) {
+        if (importLine.matches(".*as.*")) {
             String[] parsed = importLine.split(", ");
-            for(int i = 0; i < parsed.length; i++) {
+            for (int i = 0; i < parsed.length; i++) {
                 String[] wordParse = parsed[i].split(" ");
-                for(int j = 0; j < wordParse.length; j++) {
-                    if(i == 0 && j == 0) {
+                for (int j = 0; j < wordParse.length; j++) {
+                    if (i == 0 && j == 0) {
                         str.add(wordParse[j].replaceAll(".*\\.", ""));
-                    } else if(wordParse[j].matches(" *as *")) {
+                    } else if (wordParse[j].matches(" *as *")) {
                         str.remove(str.size() - 1);
                         j++;
                         str.add(wordParse[j].replaceAll(",", ""));
@@ -76,9 +74,9 @@ public class LogError {
 
             }
         } else {
-            String [] parsed = importLine.split(" ");
-            for(String temp: parsed) {
-                if(!str.isEmpty()) {
+            String[] parsed = importLine.split(" ");
+            for (String temp : parsed) {
+                if (!str.isEmpty()) {
                     str.add(temp);
                 } else {
                     str.add(temp.replaceAll(".*\\.", ""));

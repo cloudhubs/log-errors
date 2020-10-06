@@ -1,10 +1,10 @@
 package ires.baylor.edu.logerrors.matcher.util;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
 import org.bson.Document;
 
 import java.util.ArrayList;

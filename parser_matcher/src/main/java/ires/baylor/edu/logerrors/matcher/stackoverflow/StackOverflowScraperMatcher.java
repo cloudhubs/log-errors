@@ -16,7 +16,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 
-
 /**
  * Finds multiple matches from the Stack Overflow scraped data to the Log Error given
  *
@@ -24,7 +23,9 @@ import java.util.List;
  */
 @Slf4j
 public class StackOverflowScraperMatcher {
-    /** Can use any of the strategy methods for the matcher*/
+    /**
+     * Can use any of the strategy methods for the matcher
+     */
     private static MatcherAlgorithm matcher = new ScoreTextMatching();
 
 
@@ -64,6 +65,7 @@ public class StackOverflowScraperMatcher {
 
     /**
      * Removes the duplicates from the list given. This function is able to keep the list order
+     *
      * @param textMatch List of ScraperObjects with duplicates
      * @return List of ScraperObjects without duplicates
      */

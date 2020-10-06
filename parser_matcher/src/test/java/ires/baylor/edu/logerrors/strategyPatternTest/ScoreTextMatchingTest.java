@@ -13,10 +13,11 @@ public class ScoreTextMatchingTest extends MatcherAlgorithmTest {
     public static void init() {
         matcher = new ScoreTextMatching();
     }
+
     @Test
     public void basicTest() {
         List<ScraperObject> returnList = matcher.match(scraperObj, error1);
-        for(ScraperObject obj: returnList) {
+        for (ScraperObject obj : returnList) {
             System.out.println(obj.getTitle());
         }
         assert returnList.size() == 2;
@@ -24,6 +25,7 @@ public class ScoreTextMatchingTest extends MatcherAlgorithmTest {
         assert returnList.get(0).getTitle().equals("How does python unit testing work?");
         assert returnList.get(1).getTitle().equals("Python testing error: file not found");
     }
+
     @Test
     public void BroadTest() {
         List<ScraperObject> returnList = matcher.match(scraperObj, error2);
@@ -34,11 +36,13 @@ public class ScoreTextMatchingTest extends MatcherAlgorithmTest {
         assert returnList.get(2).getTitle().equals("Python flask tutorial");
 
     }
+
     @Test
     public void InTextAndCodeTest() {
         List<ScraperObject> returnList = matcher.match(scraperObj2, broadError);
         assert returnList.size() == 3;
     }
+
     @Test
     void weirdSyntax() {
         //Should have same result as basicTest

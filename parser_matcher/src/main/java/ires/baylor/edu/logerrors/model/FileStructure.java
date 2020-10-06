@@ -1,6 +1,9 @@
 package ires.baylor.edu.logerrors.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -28,16 +31,18 @@ public class FileStructure {
     public void addFuncName(String str) {
         this.functionNames.add(str);
     }
+
     public void addClassName(String str) {
         this.classNames.add(str);
     }
+
     public void addImports(String str) {
         this.imports.add(str);
     }
+
     public void addVarNames(String str) {
         this.varNames.add(str);
     }
-
 
 
     public void removeDuplicates() {

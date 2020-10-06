@@ -20,12 +20,12 @@ public class FuzzyTitleMatching extends MatcherAlgorithm {
      */
     @Override
     public List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch) {
-        if(SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {
+        if (SOFromDB == null || logToMatch == null || logToMatch.getErrorMessage() == null) {
             return new ArrayList<>();
         }
         List<ScraperObject> returnList = new ArrayList<>();
         for (ScraperObject soq : SOFromDB) {
-            if(soq.getTitle() == null) {
+            if (soq.getTitle() == null) {
                 continue;
             }
             if (FuzzySearch.tokenSortPartialRatio(logToMatch.getErrorMessage(), soq.getTitle()) >= PERCENT_MATCH) {
