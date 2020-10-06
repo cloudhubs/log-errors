@@ -18,12 +18,12 @@ public abstract class MatcherAlgorithm {
 
     public abstract List<ScraperObject> match(List<ScraperObject> SOFromDB, LogError logToMatch);
 
-    public List<Document> getAllDbDocuments(String qualifier){
+    public List<Document> getAllDbDocuments(String qualifier) {
         mongoConnector db = new mongoConnector();
         return db.getAllFrom(db.getCollection("coll_name"));
     }
 
-    public List<ScraperObject> convertDocuments(List<Document> documents){
+    public List<ScraperObject> convertDocuments(List<Document> documents) {
         List<ScraperObject> scraper = new ArrayList<>();
         documents.forEach(d -> scraper.add(new ScraperObject(d)));
         return scraper;

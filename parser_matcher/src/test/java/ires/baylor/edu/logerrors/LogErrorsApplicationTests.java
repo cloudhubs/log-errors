@@ -11,7 +11,7 @@ import java.util.List;
 class LogErrorsApplicationTests {
 
     @Test
-    void testMatch(){
+    void testMatch() {
 
     }
 
@@ -30,7 +30,7 @@ class LogErrorsApplicationTests {
         assert structural;
     }
 
-    private List<Double> getList(){
+    private List<Double> getList() {
         ArrayList<Double> weights = new ArrayList<>();
         // test for "public static void main(String [] args) {"
         weights.add(1.0); // public

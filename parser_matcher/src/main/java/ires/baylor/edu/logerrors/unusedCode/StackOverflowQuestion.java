@@ -13,7 +13,7 @@ import lombok.Setter;
  * there will be MANY questions, each with many fields, and thus fields deemed
  * irrelevant are not recorded to conserve memory. If these are later determined
  * to contain important information, they will be added at that time.
- * 
+ *
  * @author Micah
  */
 @AllArgsConstructor
@@ -21,24 +21,38 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StackOverflowQuestion {
-	/** Tags of the question */
-	String[] tags;
+    /**
+     * Tags of the question
+     */
+    String[] tags;
 
-	/** Whether the question was answered */
-	boolean isAnswered;
+    /**
+     * Whether the question was answered
+     */
+    boolean isAnswered;
 
-	/** How many views the question got */
-	int viewCount;
+    /**
+     * How many views the question got
+     */
+    int viewCount;
 
-	/** Community-assigned score of the question */
-	int score;
+    /**
+     * Community-assigned score of the question
+     */
+    int score;
 
-	/** ID of the question */
-	int questionId;
+    /**
+     * ID of the question
+     */
+    int questionId;
 
-	/** Link to the Stack Overflow post */
-	String link;
+    /**
+     * Link to the Stack Overflow post
+     */
+    String link;
 
-	/** Title of the question */
-	String title;
+    /**
+     * Title of the question
+     */
+    String title;
 }

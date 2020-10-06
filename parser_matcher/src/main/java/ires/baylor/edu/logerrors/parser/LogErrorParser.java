@@ -27,11 +27,11 @@ public class LogErrorParser {
     static Pattern tracebackExitPattern = Pattern.compile(ENTRY_REGEX);
     static Pattern tracebackEntryPattern = Pattern.compile(TRACEBACK_REGEX);
     static Pattern nestedEntryPattern = Pattern.compile(NESTED_REGEX);
-
-    private static int lineNum;
     static List<FileStructure> commonClassStructure;
     static List<String> commonExternalSources;
+    private static int lineNum;
     private static String pathToDir;
+
     /**
      * Tokenizes the log file.
      *
@@ -82,7 +82,7 @@ public class LogErrorParser {
                 List<String> srcCode = getSourceCodeLine(deepestNested);
                 deepestNested.setSourceCodeLine(srcCode.get(0));
                 deepestNested.setSourceCodeFile(srcCode.get(1));
-                deepestNested.setLineNumber(lineNum+1);
+                deepestNested.setLineNumber(lineNum + 1);
                 deepestNested.setErrorCharWeight(AssignWeight.assignWeight(deepestNested));
                 deepest.setNestedError(deepestNested);
 
@@ -172,25 +172,25 @@ public class LogErrorParser {
         List<String> returnStr = new ArrayList<>();
 
 
-        if(current != null) {
+        if (current != null) {
             File folder = new File(pathToDir);
 
-            for(String str: current.getTraceBacks()) {
-                String [] strArray = str.split("\n");
+            for (String str : current.getTraceBacks()) {
+                String[] strArray = str.split("\n");
                 fileName = strArray[0].replaceAll("\",.*", "").replaceAll(".*\".*/", "");
                 currentTrace = strArray[1];
 
-                if(currentTrace != null && !currentTrace.isEmpty()) {
-                    if(!currentTrace.matches(".*import.*") && !currentTrace.matches(".*Traceback.*")) {
+                if (currentTrace != null && !currentTrace.isEmpty()) {
+                    if (!currentTrace.matches(".*import.*") && !currentTrace.matches(".*Traceback.*")) {
                         break;
-                    } else if(firstImport == null && !currentTrace.matches(".*Traceback.*")) {
+                    } else if (firstImport == null && !currentTrace.matches(".*Traceback.*")) {
                         firstImport = currentTrace;
                         firstImportFileName = fileName;
                     }
 
                 }
             }
-            if(currentTrace == null || currentTrace.isEmpty()) {
+            if (currentTrace == null || currentTrace.isEmpty()) {
                 currentTrace = firstImport;
                 fileName = firstImportFileName;
             }

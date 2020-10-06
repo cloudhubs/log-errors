@@ -1,4 +1,5 @@
 package ires.baylor.edu.logerrors.parser;
+
 import ires.baylor.edu.logerrors.model.FileStructure;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +17,7 @@ public class ProjectStructureParser {
     public static List<FileStructure> getClassStructure(String current) {
         fs = new ArrayList<>();
 
-        if(current != null) {
+        if (current != null) {
             File folder = new File(current);
             try {
                 getClassStructure(folder);
@@ -58,7 +59,7 @@ public class ProjectStructureParser {
                             temp.addFuncName(currentLine);
 
                         } else if (currentLine.matches(".*=.*") && !currentLine.matches(".*#.*|.*(\\+|-|!|=|>|<)=.*")) {
-                            if (currentLine.matches(".*self\\..*")){
+                            if (currentLine.matches(".*self\\..*")) {
                                 temp.addVarNames(currentLine.replaceAll(" *=.*", "").replaceAll(".*self\\.", "").replaceFirst(" *", ""));
                             } else if (!currentLine.replaceAll("=.*", "").matches(".*\\..*") && !currentLine.matches("[^=]*\\(.*=.*\\).*")) {
                                 temp.addVarNames(currentLine.replaceAll(" *=.*", "").replaceFirst(" *", "").replaceAll("\\[.*\\]", ""));
@@ -79,7 +80,7 @@ public class ProjectStructureParser {
 
     public static List<String> getRequirements(String current) {
         requirements = new ArrayList<>();
-        if(current != null) {
+        if (current != null) {
             File folder = new File(current);
             try {
                 getRecs(folder);

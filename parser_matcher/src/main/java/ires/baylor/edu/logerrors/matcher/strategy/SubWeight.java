@@ -4,13 +4,14 @@ import ires.baylor.edu.logerrors.matcher.scraper.ScraperObject;
 import ires.baylor.edu.logerrors.matcher.util.RegexCache;
 import ires.baylor.edu.logerrors.matcher.util.mongoConnector;
 import ires.baylor.edu.logerrors.model.LogError;
-
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class SubWeight extends MatcherAlgorithm {
@@ -105,7 +106,7 @@ public class SubWeight extends MatcherAlgorithm {
         this.regex = setRegex(logToMatch.getSourceCodeLine());
 
         String cached_id = RegexCache.check(this.regex);
-        if(RegexCache.check(this.regex) != ""){
+        if (RegexCache.check(this.regex) != "") {
             return (List<ScraperObject>) RegexCache.get(cached_id).get("so_post");
         }
 
@@ -127,7 +128,7 @@ public class SubWeight extends MatcherAlgorithm {
             }
         }
 
-        RegexCache.add(this.regex,matched);
+        RegexCache.add(this.regex, matched);
 
         return matched;
     }
