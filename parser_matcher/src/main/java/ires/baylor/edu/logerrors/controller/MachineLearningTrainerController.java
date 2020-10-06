@@ -2,10 +2,8 @@ package ires.baylor.edu.logerrors.controller;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -230,7 +228,8 @@ public class MachineLearningTrainerController {
 				try {
 					log.info("Run " + (++i) + "/" + errs.length);
 					mcp.setCurrentError(err);
-					StackOverflowScraperMatcher.matchLog(mcp);
+//					StackOverflowScraperMatcher.matchLog(mcp);
+					StackOverflowScraperMatcher.matchLog(err);
 					Thread.sleep(3000);
 				} catch (IOException | InterruptedException ex) {
 					ex.printStackTrace();
