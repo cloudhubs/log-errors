@@ -61,15 +61,28 @@ def delete_all_errors():
 @db_controller.route("/mongo/test/url", methods=['POST'])
 @cross_origin()
 def test_add_url():
-    # scrape the site.
-    site_data = scrape_link(request.json.get('url'))
-    # add the site to the db
-    con = getSession()
-    val = con.testdb.coll_name.insert_one(site_data)
-    con.close()
+    url = request.json.get('url')
 
-    return {"id": str(val.inserted_id)}
-    # reuturn the id
+    con = getSession()
+
+    # check url already exists
+    val = con.testdb.coll_name.find_one({"url": url})
+
+    if val is None:
+        # scrape the site
+        site_data = scrape_link(url)
+        # add the site to the db
+        val = con.testdb.coll_name.insert_one(site_data)
+        # close db connection
+        con.close()
+        # return the id
+        return {"id": str(val.inserted_id)}
+
+    # close db connection
+    con.close()
+    # return the id
+    return {"id": str(val.get('_id'))}
+    
 @db_controller.route("/mongo/test/url", methods=['DELETE'])
 @cross_origin()
 def test_delete_url():
